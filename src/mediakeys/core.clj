@@ -1,18 +1,15 @@
-(ns mediakeys.core)
+(ns mediakeys.core
+    (:use [mediakeys.hotkeys :only [register-keys!]])
+    (:require [rx.lang.clojure.interop :as rx])
+    (:import [rx Observable]))
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
 (import [javax.swing KeyStroke])
 
-(defn ^HotKeyListener action-listener [action]
-   (proxy [HotKeyListener] []
-            (onHotKey [event] (action event))))
-
-(defn make-keystroke [keystroke]
-    (KeyStroke/getKeyStroke keystroke))
-
+(def dose-keys {:foo "control 1" :bar "control 2"})
 (def ^Provider current-provider
     (Provider/getCurrentProvider false))
 
 (defn -main [] 
-    (.register current-provider 
-        (make-keystroke "control 1")
-        (action-listener println )))
+    (let [obs (register-keys! current-provider dose-keys)]
+        (.subscribe obs (rx/action [x]
+            (println x)))))
