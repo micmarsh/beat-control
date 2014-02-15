@@ -1,27 +1,31 @@
-(ns mediakeys.hotkeys)
+(ns mediakeys.hotkeys
+    (:use [mediakeys.file :only [DEFAULT_KEYS]]
+          [clojure.core.async :only [chan put!]]))
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
 (import [javax.swing KeyStroke])
 
-(defn ^HotKeyListener make-action-listener [action]
-   (proxy [HotKeyListener] []
-            (onHotKey [event] (action))))
+; (defn ^HotKeyListener action-listener [action]
+;    (proxy [HotKeyListener] []
+;             (onHotKey [event] (action event))))
 
 (defn make-keystroke [keystroke]
     (KeyStroke/getKeyStroke keystroke))
 
-(def ^Provider current-provider
-    (Provider/getCurrentProvider false))
+(def current-keys (atom DEFAULT_KEYS))
 
-
-
-
-
+(defn register-keys! [provider keys]
+    (let [keypresses (chan)]
+        (doseq [[action hotkey] keys
+                keystroke [(make-keystroke hotkey)]]
+            (.register provider keystroke
+                (proxy [HotKeyListener] []
+                    (onHotKey [event]
+                        (put! keypresses action)))))
+        keypresses))
 
 ; schema {:play "hotkey combo", :forward "",...} (doesn't have to be all items, since this is just updates)
-(defn key-events [key-changes])
-; idea here: key-changes is a channel/observable that's receiving messages
-; telling it to change up the hotkeys. for each event from key-changes (filtering erroneous ones at a lower level )
-; reset both some provider atom and record of what's what atom (<- which can save to the fs on a separate thread)
-; on each keypress in the provider, put something in the channel that this is returning. cool
+(def key-events 
+    (let [provider (Provider/getCurrentProvider false)]))
+
 
 
