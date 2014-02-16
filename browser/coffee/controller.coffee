@@ -22,9 +22,14 @@ press = handlePlayPause (button) ->
         buttons[button] = $ buttonElements[button]
     buttons[button].click()
 
-connection = new WebSocket('ws://localhost:8886/controls')
-connection.onopen = -> console.log 'connected to controls'
-connection.onmessage = ({data}) -> press data
+do open = ->
+    connection = new WebSocket('ws://localhost:8886/controls')
+    connection.onopen = -> console.log 'connected to controls'
+    connection.onmessage = ({data}) -> press data
+    connection.onclose = -> setTimeout ->
+        console.log 'yo whatup'
+        open()
+    , 1000
 
 setTimeout ->
     injectScript('http://code.jquery.com/jquery-2.1.0.min.js') unless $?
