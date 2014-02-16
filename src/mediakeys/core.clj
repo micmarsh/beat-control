@@ -1,6 +1,8 @@
 (ns mediakeys.core
     (:use [mediakeys.hotkeys :only [keypress-events!]])
-    (:require [rx.lang.clojure.interop :as rx])
+    (:require
+        [clojure.data.json :as json] 
+        [rx.lang.clojure.interop :as rx])
     (:import 
            [rx Observable]
            [org.webbitserver WebServer WebServers WebSocketHandler]
@@ -17,6 +19,11 @@
     (Observable/create
         (rx/action [^rx.Subscriber s]
             (reset! incoming-sub s))))
+(def incoming-json 
+    (.map incoming-observable 
+        (rx/fn* json/read-json)))
+(.subscribe incoming-observable
+    (rx/action* println))
 ;THIS SHOULD ACTUALLY get transformed a bunch
 ;before getting fed into keypress-events
 
@@ -33,7 +40,7 @@
             (rx/action [x]
                 (println x)))))
 
-(def keypresses (-> incoming-observable keypress-events!))
+(def keypresses (-> incoming-json  keypress-events!))
 
 (defn -main []
   (doto (WebServers/createWebServer 8080)
