@@ -3,12 +3,19 @@ LOCATION = window.location.hostname
 
 groovesharkElements =
     play: '#play-pause'
+    pause:  '#play-pause'
     forward: '#play-next'
     back: '#play-prev'
 rdioElements =
     play:  '.play_pause'
+    pause:  '.play_pause'
     forward: '.next'
     back: '.prev'
+theListElements = 
+    play: '.fa-play'
+    pause: '.fa-pause'
+    forward: '.fa-step-forward'
+    back: '.fa-step-backward'
 # youtubeElements =
 #     play: do ->
 #         playClass = 'html5-play-button'
@@ -23,6 +30,7 @@ elements =
     'www.grooveshark.com': groovesharkElements
     'rdio.com': rdioElements
     'www.rdio.com': rdioElements
+    'brandly.github.io': theListElements
     # 'youtube.com': youtubeElements
     # 'www.youtube.com': youtubeElements
 
