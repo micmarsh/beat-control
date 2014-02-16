@@ -29,13 +29,13 @@
 ; schema {:play "hotkey combo", :forward "",...} (doesn't have to be all items, since this is just updates)
 (def prstr (comp println str))
 
-(def keypress-events! 
-    (let [provider (Provider/getCurrentProvider false)]
-        (fn [key-changes]
-            (.flatMap key-changes 
-                (rx/fn [key-update] 
-                    (let [ n (prstr "*****************" key-update)
-                          new-keys (swap! current-keys #(merge % key-update))]
-                        (.reset provider)
-                        (prstr new-keys)
-                        (register-keys! provider new-keys)))))))
+(def provider (atom (Provider/getCurrentProvider false)))
+
+(defn keypress-events! [key-changes]
+    (.flatMap key-changes 
+        (rx/fn [key-update] 
+            (let [new-keys (swap! current-keys #(merge % key-update))]
+                (.reset @provider)
+                (.stop @provider)
+                (reset! provider (Provider/getCurrentProvider false))
+                (register-keys! @provider new-keys)))))
