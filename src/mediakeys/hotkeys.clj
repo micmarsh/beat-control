@@ -19,6 +19,7 @@
     (Observable/create 
         (rx/action [^rx.Subscriber s]
             (doseq [[action hotkey] keys
+                    n [(println hotkey)]
                     keystroke [(make-keystroke hotkey)]]
                     (.register provider keystroke
                         (proxy [HotKeyListener] []
@@ -26,10 +27,15 @@
                                 (.onNext s action))))))))
 
 ; schema {:play "hotkey combo", :forward "",...} (doesn't have to be all items, since this is just updates)
-(def key-events 
+(def prstr (comp println str))
+
+(def keypress-events! 
     (let [provider (Provider/getCurrentProvider false)]
         (fn [key-changes]
-            )))
-
-
-
+            (.flatMap key-changes 
+                (rx/fn [key-update] 
+                    (let [ n (prstr "*****************" key-update)
+                          new-keys (swap! current-keys #(merge % key-update))]
+                        (.reset provider)
+                        (prstr new-keys)
+                        (register-keys! provider new-keys)))))))

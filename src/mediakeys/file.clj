@@ -7,8 +7,8 @@
 (def DEFAULT {
         :play "control space"
         ;TODO look up actual key combinations
-        :forward "control right_arrow"
-        :back "control left_arrow"
+        :forward "control k"
+        :back "control j"
     })
 (def DEFAULT_KEYS
     (try (load-file LOCATION)
