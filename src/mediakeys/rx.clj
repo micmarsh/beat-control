@@ -12,8 +12,6 @@
 (defn-obs map .map)
 (defn-obs filter .filter)
 
-; this should be a separate thing,
-; it doesn't handle multiple functions
 (defn sub 
     ([^Observable o fn0]
         (sub o fn0 nil nil))

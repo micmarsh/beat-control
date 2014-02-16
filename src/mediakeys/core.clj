@@ -15,10 +15,7 @@
         (fn [s]
             (reset! incoming-sub s))))
 (def incoming-json 
-    (map incoming-observable 
-        json/read-json))
-;THIS SHOULD ACTUALLY get transformed a bunch
-;before getting fed into keypress-events
+    (map incoming-observable json/read-json))
 
 (def keypresses (-> incoming-json  keypress-events! (map name)))
 
@@ -36,6 +33,6 @@
                 (next! @incoming-sub j))))
     (.add (StaticFileHandler. "."))
     (.start))
-  (sub keypresses println) 
+  (sub keypresses println println) 
   (println @incoming-sub)
   (next! @incoming-sub "{}"))

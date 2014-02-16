@@ -17,15 +17,16 @@
 (defn register-keys! [provider keys]
     (observable 
         (fn [s]
-            (doseq [[action hotkey] keys
-                    n [(println hotkey)]
-                    keystroke [(make-keystroke hotkey)]]
-                (.register provider keystroke
-                    (proxy [HotKeyListener] []
-                        (onHotKey [event]
-                            (next! s action))))))))
+            (try
+                (doseq [[action hotkey] keys
+                        n [(println hotkey)]
+                        keystroke [(make-keystroke hotkey)]]
+                    (.register provider keystroke
+                        (proxy [HotKeyListener] []
+                            (onHotKey [event]
+                                (next! s action)))))
+            (catch ))))
 
-; schema {:play "hotkey combo", :forward "",...} (doesn't have to be all items, since this is just updates)
 (def prstr (comp println str))
 
 (def provider (atom (Provider/getCurrentProvider false)))
