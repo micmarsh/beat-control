@@ -1,6 +1,4 @@
 (ns mediakeys.hotkeys
-    (:require [rx.lang.clojure.interop :as rx])
-    (:import [rx Observable])
     (:use [mediakeys.file :only [DEFAULT_KEYS]]
            mediakeys.rx))
 
@@ -25,7 +23,7 @@
                 (.register provider keystroke
                     (proxy [HotKeyListener] []
                         (onHotKey [event]
-                            (.next! s action))))))))
+                            (next! s action))))))))
 
 ; schema {:play "hotkey combo", :forward "",...} (doesn't have to be all items, since this is just updates)
 (def prstr (comp println str))
