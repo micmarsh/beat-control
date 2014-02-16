@@ -32,5 +32,5 @@
             (onMessage [c j] 
                 (println (str "yo mesage " j))
                 (next! @incoming-sub j))))
-    (.add (StaticFileHandler. "."))
+    (.add (StaticFileHandler. "browser/"))
     (.start)))
