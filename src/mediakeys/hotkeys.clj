@@ -1,7 +1,8 @@
 (ns mediakeys.hotkeys
     (:require [rx.lang.clojure.interop :as rx])
     (:import [rx Observable])
-    (:use [mediakeys.file :only [DEFAULT_KEYS]]))
+    (:use [mediakeys.file :only [DEFAULT_KEYS]]
+           mediakeys.rx))
 
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
 (import [javax.swing KeyStroke])
@@ -32,8 +33,8 @@
 (def provider (atom (Provider/getCurrentProvider false)))
 
 (defn keypress-events! [key-changes]
-    (.flatMap key-changes 
-        (rx/fn [key-update] 
+    (mapcat key-changes 
+        (fn [key-update] 
             (let [new-keys (swap! current-keys #(merge % key-update))]
                 (.reset @provider)
                 (.stop @provider)

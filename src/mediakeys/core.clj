@@ -1,6 +1,6 @@
 (ns mediakeys.core
-    (:use [mediakeys.hotkeys :only [keypress-events!]])
-           mediakeys.rx
+    (:use [mediakeys.hotkeys :only [keypress-events!]]
+          mediakeys.rx)
     (:require
         [clojure.data.json :as json] 
         [rx.lang.clojure.interop :as rx])
@@ -21,8 +21,8 @@
         (rx/action [^rx.Subscriber s]
             (reset! incoming-sub s))))
 (def incoming-json 
-    (.map incoming-observable 
-        (rx/fn* json/read-json)))
+    (map incoming-observable 
+        json/read-json))
 ;THIS SHOULD ACTUALLY get transformed a bunch
 ;before getting fed into keypress-events
 
