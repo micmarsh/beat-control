@@ -22,8 +22,6 @@
 (def incoming-json 
     (.map incoming-observable 
         (rx/fn* json/read-json)))
-(.subscribe incoming-observable
-    (rx/action* println))
 ;THIS SHOULD ACTUALLY get transformed a bunch
 ;before getting fed into keypress-events
 
@@ -52,6 +50,6 @@
                         (.send c (name action)))))
             (onClose [c] (println "closed" c))
             (onMessage [c j] 
-                (.onNext incoming-sub j))))
+                (.onNext @incoming-sub j))))
     (.add (StaticFileHandler. "."))
     (.start)))
