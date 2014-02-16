@@ -38,18 +38,23 @@
             (rx/action [x]
                 (println x)))))
 
-(def keypresses (-> incoming-json  keypress-events!))
+(def keypresses (-> incoming-json  keypress-events! (.map (rx/fn* name))))
 
 (defn -main []
   (doto (WebServers/createWebServer 8080)
     (.add "/websocket"
           (proxy [WebSocketHandler] []
-            (onOpen [c] 
+            (onOpen [c]
+                (println "yo opened") 
                 (.subscribe keypresses
                     (rx/action [action]
-                        (.send c (name action)))))
+                        (.send c action))))
             (onClose [c] (println "closed" c))
             (onMessage [c j] 
                 (.onNext @incoming-sub j))))
     (.add (StaticFileHandler. "."))
-    (.start)))
+    (.start))
+  (.subscribe keypresses
+      (rx/action* println)) 
+  (println @incoming-sub)
+  (.onNext @incoming-sub "{}"))

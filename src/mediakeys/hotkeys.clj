@@ -26,6 +26,7 @@
                             (onHotKey [event]
                                 (.onNext s action))))))))
 
+; schema {:play "hotkey combo", :forward "",...} (doesn't have to be all items, since this is just updates)
 (def prstr (comp println str))
 
 (def provider (atom (Provider/getCurrentProvider false)))
