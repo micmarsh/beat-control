@@ -14,7 +14,7 @@
 
 (def current-keys (atom DEFAULT_KEYS))
 
-(defn register-keys! [provider keys]
+(defn register-keys! [^Provider provider keys]
     (observable 
         (fn [s]
             (doseq [[action hotkey] keys
@@ -37,5 +37,5 @@
                   result (register-keys! new-provider new-keys)]
                 (.reset @provider)
                 (.stop @provider)
-                (reset! provider)
+                (reset! provider new-provider)
                 result))))
