@@ -18,7 +18,6 @@
     (observable 
         (fn [s]
             (doseq [[action hotkey] keys
-                    n [(println hotkey)]
                     keystroke [(make-keystroke hotkey)]]
                 (.register provider keystroke
                     (proxy [HotKeyListener] []

@@ -26,13 +26,11 @@
             (onOpen [c]
                 (println "yo opened") 
                 (sub keypresses
-                    (fn [action]
-                        (.send c action))))
+                    #(.send c %)))
             (onClose [c] (println "closed" c))
             (onMessage [c j] 
                 (next! @incoming-sub j))))
     (.add (StaticFileHandler. "."))
     (.start))
-  (sub keypresses println println) 
-  (println @incoming-sub)
+  (sub keypresses println)
   (next! @incoming-sub "{}"))
