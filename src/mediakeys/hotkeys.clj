@@ -17,15 +17,13 @@
 (defn register-keys! [provider keys]
     (observable 
         (fn [s]
-            (try
-                (doseq [[action hotkey] keys
-                        n [(println hotkey)]
-                        keystroke [(make-keystroke hotkey)]]
-                    (.register provider keystroke
-                        (proxy [HotKeyListener] []
-                            (onHotKey [event]
-                                (next! s action)))))
-            (catch ))))
+            (doseq [[action hotkey] keys
+                    n [(println hotkey)]
+                    keystroke [(make-keystroke hotkey)]]
+                (.register provider keystroke
+                    (proxy [HotKeyListener] []
+                        (onHotKey [event]
+                            (next! s action))))))))
 
 (def prstr (comp println str))
 
@@ -34,8 +32,10 @@
 (defn keypress-events! [key-changes]
     (mapcat key-changes 
         (fn [key-update] 
-            (let [new-keys (swap! current-keys #(merge % key-update))]
+            (let [new-keys (swap! current-keys #(merge % key-update))
+                  new-provider (Provider/getCurrentProvider false)
+                  result (register-keys! new-provider new-keys)]
                 (.reset @provider)
                 (.stop @provider)
-                (reset! provider (Provider/getCurrentProvider false))
-                (register-keys! @provider new-keys)))))
+                (reset! provider)
+                result))))
