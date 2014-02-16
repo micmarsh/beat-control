@@ -20,7 +20,7 @@
 (def keypresses (-> incoming-json  keypress-events! (map name)))
 
 (defn -main []
-  (doto (WebServers/createWebServer 8080)
+  (doto (WebServers/createWebServer 6666)
     (.add "/controls"
           (proxy [WebSocketHandler] []
             (onOpen [c]

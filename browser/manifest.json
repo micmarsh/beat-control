@@ -1,0 +1,28 @@
+{
+    "name": "web-hotkeys",
+    "version": "0.1",
+    "description": "Control grooveshark, rdio, and others from your desktop's media keys",
+    "browser_action": {
+        "default_title": "Web HotKeys",
+        "default_popup": "mediakeys.html"
+    },
+    "manifest_version": 2,
+    "content_security_policy": "default-src 'self' ",
+    "minimum_chrome_version": "14.0.835.202",
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "javascripts/injectscripts.js"
+            ]
+        }
+    ],
+    "web_accessible_resources": [
+        "javascripts/controller.js"
+    ],
+    "permissions": [
+        "tabs"
+    ]
+}
