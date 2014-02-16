@@ -20,7 +20,7 @@
 (def keypresses (-> incoming-json  keypress-events! (map name)))
 
 (defn -main []
-  (doto (WebServers/createWebServer 6666)
+  (doto (WebServers/createWebServer 8886)
     (.add "/controls"
           (proxy [WebSocketHandler] []
             (onOpen [c]
@@ -33,7 +33,4 @@
                 (println (str "yo mesage " j))
                 (next! @incoming-sub j))))
     (.add (StaticFileHandler. "."))
-    (.start))
-  (sub (map keypresses #(str "yo " % )) 
-    (fn [stuff]
-      (println stuff))))
+    (.start)))

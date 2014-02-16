@@ -1,7 +1,5 @@
-# LOCATION defined in pageinfo
-correctLocation = LOCATION in validLocations
-
-unless correctLocation
+# both of these defined in pageinfo
+unless LOCATION in validLocations
     return
 
 inject = do ->

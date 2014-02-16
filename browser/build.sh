@@ -7,4 +7,4 @@ coffee -cj javascripts/controller.js _controller.coffee
 cat coffee/inject.coffee coffee/pageinfo.coffee coffee/injectscripts.coffee > _injectscripts.coffee
 coffee -cj javascripts/injectscripts.js _injectscripts.coffee
 
-rm _*
+rm _* 
