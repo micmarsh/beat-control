@@ -1,5 +1,6 @@
 (ns mediakeys.core
     (:use [mediakeys.hotkeys :only [keypress-events!]])
+           mediakeys.rx
     (:require
         [clojure.data.json :as json] 
         [rx.lang.clojure.interop :as rx])
@@ -24,12 +25,6 @@
         (rx/fn* json/read-json)))
 ;THIS SHOULD ACTUALLY get transformed a bunch
 ;before getting fed into keypress-events
-
-(defn from-seq [sequence]
-    (Observable/create 
-        (rx/action [^rx.Subscriber s]
-            (doseq [item sequence]
-                (.onNext s item)))))
 
 (defn sub-to-keypresses [] 
     (let [changes (from-seq dose-keys)
