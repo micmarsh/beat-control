@@ -17,8 +17,8 @@
 
 (def incoming-sub (atom nil))
 (def incoming-observable
-    (Observable/create
-        (rx/action [^rx.Subscriber s]
+    (observable 
+        (fn [s]
             (reset! incoming-sub s))))
 (def incoming-json 
     (map incoming-observable 
@@ -44,7 +44,7 @@
                         (.send c action))))
             (onClose [c] (println "closed" c))
             (onMessage [c j] 
-                (.onNext @incoming-sub j))))
+                (next! @incoming-sub j))))
     (.add (StaticFileHandler. "."))
     (.start))
   (sub keypresses println) 
