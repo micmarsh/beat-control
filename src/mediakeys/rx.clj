@@ -3,10 +3,9 @@
     (:import [rx Observable]))
 
 (defmacro defn-obs [coll-fn obs-fn]
-    (let [wrap (if (= obs-fn '.subscribe) rx/action* rx/fn*)]
-        `(defn ~coll-fn [^Observable obs# function#]
-            (~obs-fn obs#
-                (~wrap function#)))))
+    `(defn ~coll-fn [^Observable obs# function#]
+        (~obs-fn obs#
+            (rx/fn* function#))))
 
 (defn-obs mapcat .flatMap)
 (defn-obs map .map)

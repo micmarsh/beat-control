@@ -10,12 +10,12 @@
 (import [javax.swing KeyStroke])
 
 (def incoming-sub (atom nil))
-(def incoming-observable
+(def incoming-messages
     (observable 
         (fn [s]
             (reset! incoming-sub s))))
 (def incoming-json 
-    (map incoming-observable json/read-json))
+    (map incoming-messages json/read-json))
 
 (def keypresses (-> incoming-json  keypress-events! (map name)))
 
@@ -25,12 +25,15 @@
           (proxy [WebSocketHandler] []
             (onOpen [c]
                 (println "yo opened") 
-                (sub keypresses
-                    #(.send c %)))
+                (sub keypresses #(.send c %))
+                ; needs to "start" data flow
+                (next! @incoming-sub "{}"))
             (onClose [c] (println "closed" c))
             (onMessage [c j] 
+                (println (str "yo mesage " j))
                 (next! @incoming-sub j))))
     (.add (StaticFileHandler. "."))
     (.start))
-  (sub keypresses println)
-  (next! @incoming-sub "{}"))
+  (sub (map keypresses #(str "yo " % )) 
+    (fn [stuff]
+      (println stuff))))
