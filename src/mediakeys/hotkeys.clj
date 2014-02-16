@@ -17,15 +17,15 @@
 (def current-keys (atom DEFAULT_KEYS))
 
 (defn register-keys! [provider keys]
-    (Observable/create 
-        (rx/action [^rx.Subscriber s]
+    (observable 
+        (fn [s]
             (doseq [[action hotkey] keys
                     n [(println hotkey)]
                     keystroke [(make-keystroke hotkey)]]
-                    (.register provider keystroke
-                        (proxy [HotKeyListener] []
-                            (onHotKey [event]
-                                (.onNext s action))))))))
+                (.register provider keystroke
+                    (proxy [HotKeyListener] []
+                        (onHotKey [event]
+                            (.next! s action))))))))
 
 ; schema {:play "hotkey combo", :forward "",...} (doesn't have to be all items, since this is just updates)
 (def prstr (comp println str))
