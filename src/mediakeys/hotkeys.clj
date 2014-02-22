@@ -5,10 +5,6 @@
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
 (import [javax.swing KeyStroke])
 
-; (defn ^HotKeyListener action-listener [action]
-;    (proxy [HotKeyListener] []
-;             (onHotKey [event] (action event))))
-
 (defn make-keystroke [keystroke]
     (KeyStroke/getKeyStroke keystroke))
 
@@ -28,13 +24,19 @@
 
 (def provider (atom (Provider/getCurrentProvider false)))
 
+(defn key-config! [key-changes]
+    (map key-changes
+        (fn [key-update]
+            (swap! current-keys #(merge % key-update)))))
+
 (defn keypress-events! [key-changes]
-    (mapcat key-changes 
-        (fn [key-update] 
-            (let [new-keys (swap! current-keys #(merge % key-update))
-                  new-provider (Provider/getCurrentProvider false)
-                  result (register-keys! new-provider new-keys)]
-                (.reset @provider)
-                (.stop @provider)
-                (reset! provider new-provider)
-                result))))
+    (-> key-changes
+        key-config!
+        (mapcat (fn [all-keys]
+            (let [new-provider (Provider/getCurrentProvider false)
+                  result register-keys! new-provider all-keys]
+                  (doto @provider
+                      (.reset)
+                      (.stop))
+                  (reset! provider new-provider)
+                  result)))))
