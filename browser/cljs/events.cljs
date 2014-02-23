@@ -42,7 +42,3 @@
         (while true
             (let [thing (<! channel)]
                 (function thing)))))
-
-(def print #(.log js/console %))
-(subscribe characters print)
-(subscribe modifiers print)
