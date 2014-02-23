@@ -8,12 +8,12 @@
 (defn setting-text [action]
     (make-tag {
             :tag "span"
-            :id action
+            :id (str action "-text")
             :class "setting"
         }))
 (defn setting-button [action]
     (make-tag {
         :tag "button"
-        :id action
+        :id (str action "-button")
         :class "change"
         }))

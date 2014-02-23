@@ -1,8 +1,6 @@
 (ns mediakeys.browser.core
-    (:use [mediakeys.browser.view :only 
-            [setting-button setting-text]]
-           [mediakeys.browser.settings :only
-            [change-setting!]])
+    (:use [mediakeys.browser.view :only [setting-button setting-text]]
+           [mediakeys.browser.settings :only [change-setting!]])
     (:require [reagent.core :as reagent :refer [atom]]))
 
 
@@ -14,8 +12,7 @@
 
 (js/setInterval 
     (fn []
-        (.log js/console "yo")
-        (swap! settings assoc 
+        (swap! settings assoc
             (rand-nth (keys @settings)) 
             (.toISOString (js/Date.)))) 
 500)
