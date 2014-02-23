@@ -12,7 +12,6 @@
         :back "control 7"
     }))
 
-
 (js/setInterval 
     (fn []
         (.log js/console "yo")
@@ -31,7 +30,7 @@
                 action-str ": "
                 [(setting-text action-str) setting]
                 [(setting-button action-str) 
-                    {:on-click #(change-setting! action-str)}
+                    {:on-click #(change-setting! settings action-str)}
                     "change"]])])
 
 (defn ^:export run []
