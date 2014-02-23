@@ -1,5 +1,5 @@
 (ns mediakeys.browser.settings
-    (:use [cljs.core.async :only [chan <! map< filter< put!]])
+    (:use [cljs.core.async :only [chan <! map< split put!]])
     (:use-macros [cljs.core.async.macros :only [go]]))
 
 (def keypresses (chan))
@@ -10,15 +10,29 @@
         18 "alt"
     })
 
+(defn modifier? [code]
+    (contains? modifier-codes code))
+
 (.addEventListener js/document "keydown"
     (fn [event]
         (put! keypresses event)))
 
+(def keycodes
+    (map< #(.-keyCode %) keypresses))
+(def split-codes 
+    (split modifier? keycodes))
+
 (def modifiers
-    (->> keypresses
-        (map<  #(.-keyCode %))
-        (filter< #(contains? modifier-codes %))
-        (map<  #(modifier-codes % ))))
+    (map<  modifier-codes
+        (first split-codes)))
+(def characters
+    (map< (.-fromCharCode js/String)
+        (second split-codes)))
+
+(go 
+    (while true
+        (let [thing (<! characters)]
+            (.log js/console thing))))
 (go 
     (while true
         (let [thing (<! modifiers)]
