@@ -34,7 +34,7 @@
         key-config!
         (mapcat (fn [all-keys]
             (let [new-provider (Provider/getCurrentProvider false)
-                  result register-keys! new-provider all-keys]
+                  result (register-keys! new-provider all-keys)]
                   (doto @provider
                       (.reset)
                       (.stop))
