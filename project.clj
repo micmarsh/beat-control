@@ -19,7 +19,7 @@
         ; The path to the top-level ClojureScript source directory:
         :source-paths ["browser/cljs" ]
         :compiler {
-          :preamble ["reagent/react.js"]
+          :preamble ["reagent/react.min.js"]
           :output-to "browser/javascripts/main.js"  
-          :optimizations :whitespace
-          :pretty-print true}}]})
+          :optimizations :advanced
+          :pretty-print false}}]})

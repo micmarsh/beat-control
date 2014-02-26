@@ -20,7 +20,8 @@ handlePlayPause = do ->
 press = handlePlayPause (button) ->
     unless buttonExists button
         buttons[button] = $ buttonElements[button]
-    buttons[button].click()
+    [singleButton] = buttons[button]
+    singleButton.click()
 
 do open = (delay = 1000) ->
     connection = new WebSocket('ws://localhost:8886/controls')

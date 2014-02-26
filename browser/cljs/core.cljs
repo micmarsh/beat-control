@@ -11,10 +11,10 @@
     }))
 
 (js/setInterval 
-    (fn []
-        (swap! settings assoc
-            (rand-nth (keys @settings)) 
-            (.toISOString (js/Date.)))) 
+    #(swap! settings assoc
+        (rand-nth (keys @settings)) 
+        (.slice (.toISOString (js/Date.)) 
+            (count "2014-02-23T04:19:")))
 500)
 
 (defn main-view []

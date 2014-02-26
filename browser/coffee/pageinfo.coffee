@@ -16,6 +16,11 @@ theListElements =
     pause: '.fa-pause'
     forward: '.fa-step-forward'
     back: '.fa-step-backward'
+playlisterElements = 
+    play: "a[href='#play']"
+    pause: "a[href='#pause']"
+    forward: "a[href='#next']"
+    back: "a[href='#prev']"
 
 # youtubeElements =
 #     play: do ->
@@ -32,6 +37,7 @@ elements =
     'rdio.com': rdioElements
     'www.rdio.com': rdioElements
     'brandly.github.io': theListElements
+    'redditplayer.phoenixforgotten.com': playlisterElements
     # 'youtube.com': youtubeElements
     # 'www.youtube.com': youtubeElements
 

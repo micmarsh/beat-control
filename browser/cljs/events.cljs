@@ -24,15 +24,20 @@
     (map<  modifier-codes
         (first split-codes)))
 
+(def special-chars {
+        32 "space"
+        9 "tab"
+        37 "left"
+        38 "up"
+        39 "right"
+        40 "down"
+    })
+
 (defn from-char-code [code]
-    (cond
-        (= code 32)
-            "space"
-        (= code 9)
-            "tab"
-        :else 
+    (let [special (special-chars code)]
+        (or special
             (.toLowerCase
-                (.fromCharCode js/String code))))
+                (.fromCharCode js/String code)))))
 (def characters
     (map< from-char-code 
         (second split-codes)))
