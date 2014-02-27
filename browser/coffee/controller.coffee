@@ -8,14 +8,13 @@ buttonExists = (name) ->
 handlePlayPause = do ->
     playing = true #ideally, you'll want something more correct than this
     # may be hard to standardize that across all of these diff things, tho
-    (fn) ->
-        (button) ->
-            if playing is true and button is 'play'
-                button = 'pause'
-                playing = false
-            else
-                playing = true
-            fn button
+    (fn) -> (button) ->
+        if playing is true and button is 'play'
+            button = 'pause'
+            playing = false
+        else
+            playing = true
+        fn button
 
 press = handlePlayPause (button) ->
     unless buttonExists button
@@ -28,8 +27,9 @@ do open = (delay = 1000) ->
     connection.onopen = -> console.log 'connected to controls'
     connection.onmessage = ({data}) -> press data
     connection.onclose = -> setTimeout ->
-        console.log 'yo whatup'
-        open(delay * 1.5)
+        newDelay = delay * 1.5
+        console.log "server not availabe, trying again in #{newDelay} milliseconds"
+        open newDelay
     , delay
 
 setTimeout ->
