@@ -2,14 +2,8 @@
     (:use [mediakeys.browser.events :only [modifiers characters subscribe]]))
 
 
-(def print #(.log js/console %))
-(subscribe characters print)
-
-
-(defn apply-modifier! [modifier]
-    (if (changing?)
-        (let [{:keys [settings which]} @changing
-              current-text ((keyword which) @settings)])))
+; (def print #(.log js/console %))
+; (subscribe modifiers print)
 
 ;TODO! how to set what u need to set
 ; when a modifier comes in, check to see if u should set something
@@ -23,17 +17,36 @@
 
 ; both of those^ scenarios are if changing has been set by change-setting!
 
-(subscribe modifiers print)
 
-(def changing (atom {:settings nil :which nil}))
-(defn changing? []
-    (let [{:keys [settings which]} @changing]
-        (and settings which)))
+(def changing (atom nil))
+(def changing? #(-> @changing nil? not))
+
+(defn append-text [settings which text]
+    (let [old-text (settings which)
+          new-text (str old-text " " text)]
+        (assoc settings which new-text)))
+
+(defn with-append [callback]
+    (fn [keystroke]
+        (when (changing?)
+            (let [{:keys [which settings]} @changing
+                  new-text (swap! settings append-text which keystroke)]
+                (when (not (nil? callback))
+                    (callback which new-text))))))
+
+
+(subscribe modifiers (with-append))
+
+(subscribe characters
+    (with-append (fn [which text]
+            ;TODO send to server! 
+            (reset! changing nil))))
 
 (defn change-setting! [settings button] 
-    (.log js/console button)
-    (swap! settings assoc (keyword button) "change this to something!")
-    (reset! changing {
-            :settings settings
-            :which button
-        }))
+    (let [action (keyword button)]
+        (.log js/console button)
+        (swap! settings assoc action "enter a new key combination")
+        (reset! changing {
+                :settings settings
+                :which action
+            })))

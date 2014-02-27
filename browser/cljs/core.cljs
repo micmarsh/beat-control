@@ -10,12 +10,12 @@
         :back "control 7"
     }))
 
-(js/setInterval 
-    #(swap! settings assoc
-        (rand-nth (keys @settings)) 
-        (.slice (.toISOString (js/Date.)) 
-            (count "2014-02-23T04:19:")))
-500)
+; (js/setInterval 
+;     #(swap! settings assoc
+;         (rand-nth (keys @settings)) 
+;         (.slice (.toISOString (js/Date.)) 
+;             (count "2014-02-23T04:19:")))
+; 500)
 
 (defn main-view []
     [:div#main

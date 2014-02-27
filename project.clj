@@ -21,5 +21,5 @@
         :compiler {
           :preamble ["reagent/react.min.js"]
           :output-to "browser/javascripts/main.js"  
-          :optimizations :advanced
-          :pretty-print false}}]})
+          :optimizations :whitespace
+          :pretty-print true}}]})
