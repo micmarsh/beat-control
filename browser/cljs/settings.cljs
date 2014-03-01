@@ -1,6 +1,6 @@
 (ns mediakeys.browser.settings
     (:use [mediakeys.browser.events :only [modifiers characters subscribe]]
-          [mediakeys.browser.rx :only [from-async bettersub]])
+          [mediakeys.browser.rx :only [from-async multi-sub]])
     (:require [rx-cljs.observable :as rx]))
 
 
@@ -38,7 +38,7 @@
 
 (def mods (from-async modifiers))
 
-(def mods1 (bettersub mods #(.log js/console %)))
+(def mods1 (multi-sub mods #(.log js/console %)))
 
 (rx/subscribe (rx/map mods1 #(str % " yoyoyo")) #(.log js/console %) )
 ; (subscribe modifiers (with-append))
