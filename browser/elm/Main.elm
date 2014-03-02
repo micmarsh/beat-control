@@ -34,11 +34,22 @@ module Main where
 --main = flow down <| map rowView <| buttonInfo initialState
 
 
+lookup state string =
+    case string of
+        "play" -> Just (.play state)
+        "back" -> Just (.back state)
+        "forward" -> Just (.forward state)
+        _ -> Nothing
 
--- incoming signal of prices
+set state string value =
+    case string of 
+        "play" -> {state | play <- value}
+        "back" -> {state | back <- value}
+        "forward" -> {state | forward <- value}
+        _ -> state
+
 port state : Signal {play:String, back:String, forward:String}
 port changing : Signal String
 
--- outgoing signal of buy orders
 port newState : Signal {play:String, back:String, forward:String}
-port newState = dropRepeats state
+port newState = lift2 (\s str -> set s str "change me!") state changing
