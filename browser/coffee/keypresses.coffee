@@ -25,3 +25,4 @@ document.addEventListener 'keydown', ({keyCode}) ->
             String.fromCharCode(keyCode).toLowerCase()
             
         elm.ports.characters.send character
+        
