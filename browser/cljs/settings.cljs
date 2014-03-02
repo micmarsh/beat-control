@@ -51,10 +51,16 @@
 (def settings-sub (atom nil))
 
 (def settings-changes
-    (rx/create 
-        #(reset! settings-sub %)))
+    (rx/create (fn [sub] 
+        (.log js/console sub)
+        (reset! settings-sub sub))))
 
-(.log js/console settings-changes)
+(def print #(.log js/console %))
+
+(print settings-changes)
+(aset  js/window "woot" settings-changes)
+
+(print @settings-sub)
 
 (defn change-setting! [settings button] 
     (let [action (keyword button)]

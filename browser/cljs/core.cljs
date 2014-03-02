@@ -2,7 +2,9 @@
     (:use [mediakeys.browser.view :only [setting-button setting-text]]
            [mediakeys.browser.settings :only [change-setting! settings-changes]]
            [mediakeys.browser.rx :only [into-atom!]])
-    (:require [reagent.core :as reagent :refer [atom]]))
+    (:require [reagent.core :as reagent :refer [atom]]
+              [rx-cljs.observable :as rx]))
+
 
 
 (def settings (atom {
@@ -11,7 +13,11 @@
         :back "control 7"
     }))
 
-(into-atom! settings-changes settings)
+(def print #(.log js/console %))
+
+(-> settings-changes
+    (into-atom! settings)
+    (rx/subscribe print))
 
 ; (js/setInterval 
 ;     #(swap! settings assoc
@@ -34,4 +40,4 @@
                     "change"]])])
 
 (defn ^:export run []
-  (reagent/render-component [main-view] (.-body js/document)))  
+    (reagent/render-component [main-view] (.-body js/document)))  
