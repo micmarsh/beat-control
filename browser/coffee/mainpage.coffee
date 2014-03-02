@@ -7,6 +7,16 @@ Hotkeys = React.createClass
 
     displayName: 'Hotkeys'
 
+    setText: (which, text) ->
+        {settings} = @state
+        settings[which] = text
+        @setState {settings}
+
+    appendText: (which, text) ->
+        oldText = @state.settings[which]
+        unless which in oldText
+            @setText which, oldText + text
+
     getInitialState: ->
         settings:
             play: 'control 1'
@@ -17,10 +27,8 @@ Hotkeys = React.createClass
         console.log which
         # elm.ports.changing.send which
         changing = which
-        {settings} = @state
-        settings[which] = "Change Me!"
-        @setState {settings}
-            
+        @setText which, "Change Me!"
+
     render: ->
         div null, 
             h1 null, "Change Ur Hotkeys"
@@ -30,6 +38,9 @@ Hotkeys = React.createClass
 hotkeys = Hotkeys()
 
 React.renderComponent hotkeys, document.getElementById 'mainDisplay'
+
+
+
 
 # elm = Elm.worker Elm.Main,
 #     state: hotkeys.state.settings

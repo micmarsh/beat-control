@@ -17,19 +17,17 @@ isModifier = (code) -> Boolean modifierCodes[code]
 document.addEventListener 'keydown', ({keyCode}) ->
 
     if Boolean changing
-        {settings} = hotkeys.state
 
         if isModifier keyCode
             # elm.ports.modifiers.send character
-            settings[changing] += "#{modifierCodes[keyCode]} "
-            hotkeys.setState {settings}
+            hotkeys.appendText "#{modifierCodes[keyCode]} "
         else 
             special = specialChars[keyCode]
 
             character = special or
                 String.fromCharCode(keyCode).toLowerCase()
 
-            settings[changing] += "#{character}"
-            hotkeys.setState {settings}
+            hotkeys.appendText "#{character}"
+           
             changing = null
             # elm.ports.characters.send character
