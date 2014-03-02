@@ -28,6 +28,8 @@ React.renderComponent hotkeys, document.getElementById 'mainDisplay'
 elm = Elm.worker Elm.Main,
     state: hotkeys.state.settings
     changing: 'none'
+    characters: 'none'
+    modifiers: 'none'
 
 elm.ports.newState.subscribe (state) ->
     hotkeys.setState
