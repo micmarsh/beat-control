@@ -48,5 +48,15 @@
             ;TODO send to server! 
             (reset! changing nil))))
 
+(def settings-sub (atom nil))
+
+(def settings-changes
+    (rx/create 
+        #(reset! settings-sub %)))
+
+(.log js/console settings-changes)
+
 (defn change-setting! [settings button] 
-    (let [action (keyword button)]))
+    (let [action (keyword button)]
+        (rx/on-next @settings-sub 
+            (assoc settings action "changing!"))))
