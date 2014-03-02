@@ -14,14 +14,14 @@ specialChars =
 
 isModifier = (code) -> Boolean modifierCodes[code]
 
-document.addEventListener 'keydown', ({keycode}) ->
+document.addEventListener 'keydown', ({keyCode}) ->
 
-    if isModifier keycode
-        elm.ports.modifiers.send modifierCodes[keycode]
+    if isModifier keyCode
+        elm.ports.modifiers.send modifierCodes[keyCode]
     else 
-        special = specialChars[keycode]
+        special = specialChars[keyCode]
 
         character = special or
-            String.fromCharCode(keycode).toLowerCase()
-
+            String.fromCharCode(keyCode).toLowerCase()
+            
         elm.ports.characters.send character

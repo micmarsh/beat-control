@@ -54,4 +54,4 @@ port modifiers : Signal String
 port characters: Signal String
 
 port newState : Signal {play:String, back:String, forward:String}
-port newState = lift2 (\s str -> set s str "change me!") state changing
+port newState = lift3 (\s str c -> set s str c) state changing characters
