@@ -11,11 +11,15 @@ Hotkeys = React.createClass
             forward: 'control 8'
             back: 'control 7'
 
+    click: (which) -> ->
+        elm.ports.changing.send which
+
     render: ->
         div null, 
             h1 null, "Change Ur Hotkeys"
             for name, setting of @state.settings
-                p null, "#{name}: ", span(null, setting), button(null, 'change')
+                p null, "#{name}: ", span(null, setting), button 
+                    onClick: @click name
 
 hotkeys = Hotkeys()
 
