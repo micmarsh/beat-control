@@ -44,9 +44,9 @@
         (rx/zip predicates
             (fn [item bool]
              {:item item :bool bool}))
-        (.filter :bool)
+        (.filter #(% :bool))
         (multi-sub #(.log js/console %))
-        (rx/map :item)
+        (rx/map #(% :item))
 ))
 
 (def valid-modifiers (only-when changing 
