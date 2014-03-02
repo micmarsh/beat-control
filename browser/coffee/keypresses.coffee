@@ -16,13 +16,20 @@ isModifier = (code) -> Boolean modifierCodes[code]
 
 document.addEventListener 'keydown', ({keyCode}) ->
 
-    if isModifier keyCode
-        elm.ports.modifiers.send modifierCodes[keyCode]
-    else 
-        special = specialChars[keyCode]
+    if Boolean changing
+        {settings} = hotkeys.state
 
-        character = special or
-            String.fromCharCode(keyCode).toLowerCase()
-            
-        elm.ports.characters.send character
-        
+        if isModifier keyCode
+            # elm.ports.modifiers.send character
+            settings[changing] += "#{modifierCodes[keyCode]} "
+            hotkeys.setState {settings}
+        else 
+            special = specialChars[keyCode]
+
+            character = special or
+                String.fromCharCode(keyCode).toLowerCase()
+
+            settings[changing] += "#{character}"
+            hotkeys.setState {settings}
+            changing = null
+            # elm.ports.characters.send character

@@ -1,6 +1,8 @@
 
 {div, h1, p, span, button} = React.DOM
 
+changing = null
+
 Hotkeys = React.createClass 
 
     displayName: 'Hotkeys'
@@ -11,10 +13,14 @@ Hotkeys = React.createClass
             back: 'control 7'
             forward: 'control 8'
 
-    click: (which) -> ->
+    click: (which) -> =>
         console.log which
-        elm.ports.changing.send which
-
+        # elm.ports.changing.send which
+        changing = which
+        {settings} = @state
+        settings[which] = "Change Me!"
+        @setState {settings}
+            
     render: ->
         div null, 
             h1 null, "Change Ur Hotkeys"
@@ -25,12 +31,12 @@ hotkeys = Hotkeys()
 
 React.renderComponent hotkeys, document.getElementById 'mainDisplay'
 
-elm = Elm.worker Elm.Main,
-    state: hotkeys.state.settings
-    changing: 'none'
-    characters: 'none'
-    modifiers: 'none'
+# elm = Elm.worker Elm.Main,
+#     state: hotkeys.state.settings
+#     changing: 'none'
+#     characters: 'none'
+#     modifiers: 'none'
 
-elm.ports.newState.subscribe (state) ->
-    hotkeys.setState
-        settings: state
+# elm.ports.newState.subscribe (state) ->
+#     hotkeys.setState
+#         settings: state
