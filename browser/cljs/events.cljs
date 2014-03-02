@@ -1,8 +1,7 @@
 (ns mediakeys.browser.events
-    (:use [cljs.core.async :only [chan <! map< split put!]])
-    (:use-macros [cljs.core.async.macros :only [go]]))
+    (:require [rx-cljs.observable :as rx])
+    (:use [mediakeys.browser.rx :only [multi-sub]]))
 
-(def keypresses (chan))
 
 (def modifier-codes {
         16 "shift"
@@ -13,16 +12,19 @@
 (defn modifier? [code]
     (contains? modifier-codes code))
 
-(.addEventListener js/document "keydown"
-    (fn [event]
-        (put! keypresses event)))
 
-(def keycodes (map< #(.-keyCode %) keypresses))
-(def split-codes (split modifier? keycodes))
+(def keyevents 
+    (rx/create (fn [sub]
+        (.addEventListener js/document "keydown"
+            (fn [event]
+                (rx/on-next sub event))))))
+(def keycodes 
+    (rx/map keyevents #(aget % "keyCode")))
 
 (def modifiers
-    (map<  modifier-codes
-        (first split-codes)))
+    (-> keycodes
+        (.filter modifier?)
+        (rx/map #(modifier-codes %))))
 
 (def special-chars {
         32 "space"
@@ -38,12 +40,8 @@
         (or special
             (.toLowerCase
                 (.fromCharCode js/String code)))))
-(def characters
-    (map< from-char-code 
-        (second split-codes)))
 
-(defn subscribe [channel function]
-    (go 
-        (while true
-            (let [thing (<! channel)]
-                (function thing)))))
+(def characters
+    (-> keycodes
+        (.filter #(not (modifier? %)))
+        (rx/map from-char-code)))
