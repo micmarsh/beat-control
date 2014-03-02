@@ -13,8 +13,9 @@
         (.merge incoming-clicks)
         (rx/map #(identity 1))
         (.merge characters)
+        (rx/map #(number? %))
         (multi-sub #(.log js/console %))
-        (rx/map #(number? %))))
+))
 
 (defn only-when [predicates observable]
     (-> observable
