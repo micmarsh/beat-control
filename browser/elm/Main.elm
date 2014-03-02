@@ -50,6 +50,8 @@ set state string value =
 
 port state : Signal {play:String, back:String, forward:String}
 port changing : Signal String
+port modifiers : Signal String
+port characters: Signal String
 
 port newState : Signal {play:String, back:String, forward:String}
 port newState = lift2 (\s str -> set s str "change me!") state changing
