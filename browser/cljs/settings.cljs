@@ -5,10 +5,7 @@
 
 
 
-(defn append-text [settings which text]
-    (let [old-text (settings which)
-          new-text (str old-text " " text)]
-        (assoc settings which new-text)))
+
 
 ; (def print #(.log js/console %))
 ; (subscribe modifiers print)
@@ -25,9 +22,6 @@
 
 ; both of those^ scenarios are if changing has been set by change-setting!
 
-(-> modifiers
-    from-async
-    (rx/subscribe #(.log js/console %)))
 ; (subscribe modifiers (with-append))
 
 ; (-> characters
@@ -38,18 +32,35 @@
 (def incoming-clicks
     (rx/create #(reset! clicks-sub %)))
 
-(def settings-changes
-    (rx/create #()))
-
-
 (def changing
     (-> incoming-clicks
         (.merge (from-async characters))
         (rx/map #(map? %))
-        (rx/subscribe #(.log js/console %)))
-    )
+        (multi-sub #(.log js/console %))
+))
 
-(.log js/console changing)
+(defn only-when [predicates observable]
+    (-> observable
+        (rx/zip predicates
+            (fn [item bool]
+             {:item item :bool bool}))
+        (.filter :bool)
+        (multi-sub #(.log js/console %))
+        (rx/map :item)
+))
+
+(def valid-modifiers (only-when changing 
+                        (from-async modifiers)))
+(def valid-characters (only-when changing
+                        (from-async characters)))
+
+(defn append-text [{:keys [settings button]} text]
+    (let [old-text (settings button)
+          new-text (str old-text " " text)]
+        (assoc settings button new-text)))
+
+(def settings-changes 
+    (rx/zip incoming-clicks valid-modifiers append-text))
 
 (defn change-setting! [settings button] 
     (let [action (keyword button)]
