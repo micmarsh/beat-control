@@ -4,21 +4,6 @@
     (:require [rx-cljs.observable :as rx]))
 
 
-; (def print #(.log js/console %))
-; (subscribe modifiers print)
-
-;TODO! how to set what u need to set
-; when a modifier comes in, check to see if u should set something
-; if so, check to see if the text is ONLY MODIFIERS OR NOTHING if it is,
-; then u can append the modifier to the string and pop it back into settings
-;
-; when a "character" (not actually characters, necesarily) comes in
-; check to see if there's one or more modifiers as the text. if YES
-; append this character, send shit 2 the server, (also want a socket interface to make 
-; setting accurate anyhow), then reset changing and any other UI stuff to nil
-
-; both of those^ scenarios are if changing has been set by change-setting!
-
 
 (def changing (atom nil))
 (def changing? #(-> @changing nil? not))
@@ -36,11 +21,26 @@
                 (when (not (nil? callback))
                     (callback which new-text))))))
 
-(def mods (from-async modifiers))
+; (def print #(.log js/console %))
+; (subscribe modifiers print)
 
-(def mods1 (multi-sub mods #(.log js/console %)))
+;TODO! how to set what u need to set
+; when a modifier comes in, check to see if u should set something
+; if so, check to see if the text is ONLY MODIFIERS OR NOTHING if it is,
+; then u can append the modifier to the string and pop it back into settings
+;
+; when a "character" (not actually characters, necesarily) comes in
+; check to see if there's one or more modifiers as the text. if YES
+; append this character, send shit 2 the server, (also want a socket interface to make 
+; setting accurate anyhow), then reset changing and any other UI stuff to nil
 
-(rx/subscribe (rx/map mods1 #(str % " yoyoyo")) #(.log js/console %) )
+; both of those^ scenarios are if changing has been set by change-setting!
+
+(-> modifiers
+    from-async
+    (multi-sub #(.log js/console %))
+    (rx/map #(str % "!!!!!!!"))
+    (rx/subscribe #(.log js/console %)))
 ; (subscribe modifiers (with-append))
 
 (subscribe characters
@@ -49,10 +49,4 @@
             (reset! changing nil))))
 
 (defn change-setting! [settings button] 
-    (let [action (keyword button)]
-        (.log js/console button)
-        (swap! settings assoc action "enter a new key combination")
-        (reset! changing {
-                :settings settings
-                :which action
-            })))
+    (let [action (keyword button)]))
