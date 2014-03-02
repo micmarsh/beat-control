@@ -15,6 +15,8 @@
 
 (def print #(.log js/console %))
 
+(print settings-changes)
+
 (-> settings-changes
     (into-atom! settings)
     (rx/subscribe #()))

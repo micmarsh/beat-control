@@ -30,28 +30,29 @@
     (rx/subscribe #(.log js/console %)))
 ; (subscribe modifiers (with-append))
 
-(-> characters
-    from-async
-    (rx/subscribe #()))
+; (-> characters
+;     from-async
+;     (rx/subscribe #()))
 
-(def changing-sub (atom nil))
-
-(def incoming-changes
-    (rx/create (fn [sub] 
-        (reset! changing-sub sub))))
+(def clicks-sub (atom nil))
+(def incoming-clicks
+    (rx/create #(reset! clicks-sub %)))
 
 (def settings-changes
-    (rx/map incoming-changes
-        (fn [{:keys [settings which 
-                    changing new-text]}]
-            (if changing
-                (assoc settings which new-text)
-                settings))))
+    (rx/create #()))
+
+
+(def changing
+    (-> incoming-clicks
+        (.merge (from-async characters))
+        (rx/map #(map? %))
+        (rx/subscribe #(.log js/console %)))
+    )
+
+(.log js/console changing)
 
 (defn change-setting! [settings button] 
     (let [action (keyword button)]
-        (rx/on-next @changing-sub 
+        (rx/on-next @clicks-sub
             {:settings settings
-             :which action
-             :new-text "Enter a new hotkey combintation"
-             :changing true})))
+             :button action})))
