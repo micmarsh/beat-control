@@ -5,21 +5,10 @@
 
 
 
-(def changing (atom nil))
-(def changing? #(-> @changing nil? not))
-
 (defn append-text [settings which text]
     (let [old-text (settings which)
           new-text (str old-text " " text)]
         (assoc settings which new-text)))
-
-(defn with-append [callback]
-    (fn [keystroke]
-        (when (changing?)
-            (let [{:keys [which settings]} @changing
-                  new-text (swap! settings append-text which keystroke)]
-                (when (not (nil? callback))
-                    (callback which new-text))))))
 
 ; (def print #(.log js/console %))
 ; (subscribe modifiers print)
@@ -38,31 +27,31 @@
 
 (-> modifiers
     from-async
-    (multi-sub #(.log js/console %))
-    (rx/map #(str % "!!!!!!!"))
     (rx/subscribe #(.log js/console %)))
 ; (subscribe modifiers (with-append))
 
-(subscribe characters
-    (with-append (fn [which text]
-            ;TODO send to server! 
-            (reset! changing nil))))
+(-> characters
+    from-async
+    (rx/subscribe #()))
 
-(def settings-sub (atom nil))
+(def changing-sub (atom nil))
+
+(def incoming-changes
+    (rx/create (fn [sub] 
+        (reset! changing-sub sub))))
 
 (def settings-changes
-    (rx/create (fn [sub] 
-        (.log js/console sub)
-        (reset! settings-sub sub))))
-
-(def print #(.log js/console %))
-
-(print settings-changes)
-(aset  js/window "woot" settings-changes)
-
-(print @settings-sub)
+    (rx/map incoming-changes
+        (fn [{:keys [settings which 
+                    changing new-text]}]
+            (if changing
+                (assoc settings which new-text)
+                settings))))
 
 (defn change-setting! [settings button] 
     (let [action (keyword button)]
-        (rx/on-next @settings-sub 
-            (assoc settings action "changing!"))))
+        (rx/on-next @changing-sub 
+            {:settings settings
+             :which action
+             :new-text "Enter a new hotkey combintation"
+             :changing true})))

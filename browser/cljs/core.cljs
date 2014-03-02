@@ -17,14 +17,7 @@
 
 (-> settings-changes
     (into-atom! settings)
-    (rx/subscribe print))
-
-; (js/setInterval 
-;     #(swap! settings assoc
-;         (rand-nth (keys @settings)) 
-;         (.slice (.toISOString (js/Date.)) 
-;             (count "2014-02-23T04:19:")))
-; 500)
+    (rx/subscribe #()))
 
 (defn main-view []
     [:div#main
