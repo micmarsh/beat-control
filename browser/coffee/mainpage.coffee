@@ -21,8 +21,10 @@ hotkeys = Hotkeys()
 
 React.renderComponent hotkeys, document.getElementById 'mainDisplay'
 
-setTimeout ->
-    {state} = hotkeys
-    state.settings['ffoooo'] = 'bar'
-    hotkeys.setState state
-,3000
+elm = Elm.worker Elm.Main,
+    state: hotkeys.state.settings
+    changing: 'none'
+
+elm.ports.newState.subscribe (state) ->
+    hotkeys.setState
+        settings: state
