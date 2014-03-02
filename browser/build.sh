@@ -9,4 +9,10 @@ coffee -cj javascripts/injectscripts.js _injectscripts.coffee
 
 coffee -cj javascripts/main.js coffee/mainpage.coffee
 
+elm --make -o elm/Main.elm 
+mv build/elm/Main.js javascripts/elm-main.js
+
+
+rm -rf build/
+rm -rf cache/
 rm _* 
