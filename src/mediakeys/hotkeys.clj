@@ -1,5 +1,5 @@
 (ns mediakeys.hotkeys
-    (:use [mediakeys.file :only [DEFAULT_KEYS]]
+    (:use [mediakeys.file :only [DEFAULT_KEYS save-keys]]
            mediakeys.rx))
 
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
@@ -25,7 +25,9 @@
 (defn key-config! [key-changes]
     (map key-changes
         (fn [key-update]
-            (swap! current-keys #(merge % key-update)))))
+            (swap! current-keys #(merge % key-update))
+            (save-keys @current-keys)
+            @current-keys)))
 
 (defn keypress-events! [key-changes]
     (-> key-changes
