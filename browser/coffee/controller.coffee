@@ -24,7 +24,9 @@ press = handlePlayPause (button) ->
 
 do open = (delay = 1000) ->
     connection = new WebSocket('ws://localhost:8886/controls')
-    connection.onopen = -> console.log 'connected to controls'
+    connection.onopen = -> 
+        delay = 1000
+        console.log 'connected to controls'
     connection.onmessage = ({data}) -> press data
     connection.onclose = -> setTimeout ->
         newDelay = delay * 1.5
