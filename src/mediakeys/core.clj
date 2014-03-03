@@ -1,6 +1,7 @@
 (ns mediakeys.core
     (:use [mediakeys.hotkeys :only [keypress-events! key-config!]]
           [mediakeys.sockets :only [controls see-config changes]]
+          [mediakeys.file :only [DEFAULT_KEYS]]
           mediakeys.rx)
     (:require [clojure.data.json :as json])
     (:import 
@@ -30,9 +31,8 @@
   (doto (WebServers/createWebServer 8886)
     (.add "/controls" 
       (controls keypresses incoming-sub))
-    (.add "/config"
-      (see-config configs))
     (.add "/changes"
-      (changes incoming-sub))
+      (changes incoming-sub
+        (json/write-str DEFAULT_KEYS)))
     (.add (StaticFileHandler. "browser/"))
     (.start)))

@@ -15,9 +15,11 @@
         (onClose [c] (println "closed" c))
         (onMessage [c j] )))
 
-(defn changes [incoming-sub]
+(defn changes [incoming-sub initial]
     (proxy [WebSocketHandler] []
-        (onOpen [c] (println "changes")) 
+        (onOpen [c] 
+            (println "opened changes")
+            (send c initial)) 
         (onClose [c] (println "closed changes" c))
         (onMessage [c j] 
             (println (str "yo message " j))
