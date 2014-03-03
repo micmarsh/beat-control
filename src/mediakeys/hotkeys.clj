@@ -20,8 +20,6 @@
                         (onHotKey [event]
                             (next! s action))))))))
 
-(def prstr (comp println str))
-
 (def provider (atom (Provider/getCurrentProvider false)))
 
 (defn key-config! [key-changes]

@@ -3,6 +3,15 @@
 
 changing = null
 
+PLACEHOLDER = "Change Me!"
+
+shouldAppend = (oldText, text) ->
+    return true if text.length is 1
+    for code, char of specialChars
+        if char is text
+            return true
+    oldText.indexOf(text) is -1
+
 Hotkeys = React.createClass 
 
     displayName: 'Hotkeys'
@@ -14,8 +23,17 @@ Hotkeys = React.createClass
 
     appendText: (which, text) ->
         oldText = @state.settings[which]
-        unless which in oldText
-            @setText which, oldText + text
+
+        if oldText is PLACEHOLDER
+            newText = text
+        else if shouldAppend oldText, text
+            newText = oldText + text
+        else
+            newText = oldText
+
+        @setText which, newText
+
+        return newText
 
     getInitialState: ->
         settings:
@@ -25,9 +43,8 @@ Hotkeys = React.createClass
 
     click: (which) -> =>
         console.log which
-        # elm.ports.changing.send which
         changing = which
-        @setText which, "Change Me!"
+        @setText which, PLACEHOLDER
 
     render: ->
         div null, 
@@ -39,15 +56,3 @@ hotkeys = Hotkeys()
 
 React.renderComponent hotkeys, document.getElementById 'mainDisplay'
 
-
-
-
-# elm = Elm.worker Elm.Main,
-#     state: hotkeys.state.settings
-#     changing: 'none'
-#     characters: 'none'
-#     modifiers: 'none'
-
-# elm.ports.newState.subscribe (state) ->
-#     hotkeys.setState
-#         settings: state

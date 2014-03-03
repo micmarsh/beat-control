@@ -13,8 +13,14 @@
             (sub keypresses (send c))
             (next! @incoming-sub "{}"))
         (onClose [c] (println "closed" c))
+        (onMessage [c j] )))
+
+(defn changes [incoming-sub]
+    (proxy [WebSocketHandler] []
+        (onOpen [c] (println "changes")) 
+        (onClose [c] (println "closed changes" c))
         (onMessage [c j] 
-            (println (str "yo mesage " j))
+            (println (str "yo message " j))
             (next! @incoming-sub j))))
 
 (defn see-config [configs]

@@ -20,14 +20,19 @@ document.addEventListener 'keydown', ({keyCode}) ->
 
         if isModifier keyCode
             # elm.ports.modifiers.send character
-            hotkeys.appendText "#{modifierCodes[keyCode]} "
+            hotkeys.appendText changing, "#{modifierCodes[keyCode]} "
         else 
             special = specialChars[keyCode]
 
-            character = special or
-                String.fromCharCode(keyCode).toLowerCase()
+            character = special or String.fromCharCode(keyCode).toLowerCase()
 
-            hotkeys.appendText "#{character}"
+            changeTo = hotkeys.appendText changing, "#{character}"
            
+            console.log changeTo
+
+            message = {}
+            message[changing] = changeTo
+            changes.send JSON.stringify message
+
             changing = null
             # elm.ports.characters.send character

@@ -1,6 +1,6 @@
 (ns mediakeys.core
     (:use [mediakeys.hotkeys :only [keypress-events! key-config!]]
-          [mediakeys.sockets :only [controls see-config]]
+          [mediakeys.sockets :only [controls see-config changes]]
           mediakeys.rx)
     (:require [clojure.data.json :as json])
     (:import 
@@ -18,7 +18,12 @@
 (def incoming-json 
     (map incoming-messages json/read-json))
 
-(def keypresses (-> incoming-json  keypress-events! (map name)))
+(def prstr (comp println str))
+(defn idprint [thing]
+    (prstr "received: " thing)
+    thing)
+
+(def keypresses (-> incoming-json (map idprint) keypress-events! (map name)))
 (def configs (-> incoming-json key-config!))
 
 (defn -main []
@@ -27,5 +32,7 @@
       (controls keypresses incoming-sub))
     (.add "/config"
       (see-config configs))
+    (.add "/changes"
+      (changes incoming-sub))
     (.add (StaticFileHandler. "browser/"))
     (.start)))
