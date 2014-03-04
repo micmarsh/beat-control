@@ -16,4 +16,4 @@
             DEFAULT)))
 
 ; yeah, some typing here would be great
-(def save-keys (partial spit LOCATION))
+(def save-keys! (partial spit LOCATION))

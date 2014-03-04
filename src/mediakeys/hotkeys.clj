@@ -26,7 +26,7 @@
     (map key-changes
         (fn [key-update]
             (swap! current-keys #(merge % key-update))
-            (save-keys @current-keys)
+            (save-keys! @current-keys)
             @current-keys)))
 
 (defn keypress-events! [key-changes]

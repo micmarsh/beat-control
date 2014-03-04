@@ -1,6 +1,4 @@
 
-{div, h1, p, span, button} = React.DOM
-
 changing = null
 
 PLACEHOLDER = "Change Me!"
@@ -47,6 +45,7 @@ Hotkeys = React.createClass
         @setText which, PLACEHOLDER
 
     render: ->
+        {div, h1, p, span, button} = React.DOM
         div null, 
             h1 null, "Change Ur Hotkeys"
             for name, setting of @state.settings
