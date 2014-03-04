@@ -6,6 +6,3 @@ changes.onmessage = (message) ->
     {data} = message
     settings = JSON.parse data
     hotkeys.setState {settings}
-# incoming = new WebSocket PREFIX + 'config'
-# incoming.onmessage = (config) ->
-#     console.log config
