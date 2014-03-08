@@ -10,11 +10,11 @@
            [javax.swing KeyStroke]))
 
 
-(def configs-sub (atom nil))
-(def configs-obs
+(def config-sub (atom nil))
+(def config-json
     (observable 
         (fn [s]
-            (reset! configs-sub s))))
+            (reset! config-sub s))))
 
 (def incoming-sub (atom nil))
 (def incoming-messages
@@ -29,10 +29,10 @@
     (prstr "received: " thing)
     thing)
 
-(def keypresses (-> incoming-json (tap #(next! configs-sub %)) 
+(def keypresses (-> incoming-json (tap #(next! @config-sub %)) 
     (map idprint) keypress-events! (map name)))
 
-(def configs (-> configs-obs key-config! (map json/write-str)))
+(def configs (-> config-json (map idprint) key-config! (map json/write-str)))
 
 (defn -main []
   (doto (WebServers/createWebServer 8886)

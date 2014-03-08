@@ -23,9 +23,7 @@
             (rx/action* fn2))))
 
 (defn tap [^Observable o fn0]
-    (map o (fn [item]
-        (fn0 item)
-        item)))
+    (map o (fn [item] (fn0 item) item)))
 
 (defn observable [function]
     (Observable/create 
