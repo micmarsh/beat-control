@@ -1,6 +1,7 @@
 (ns mediakeys.sockets
     (:use [mediakeys.utils :only [defcurried]]
         mediakeys.rx)
+    (:require [clojure.data.json :as json])
     (:import [org.webbitserver WebSocketHandler]))
 
 (defcurried send [c message] 
@@ -15,13 +16,10 @@
         (onClose [c] (println "closed" c))
         (onMessage [c j] )))
 
-(defn changes [incoming-sub configs]
+(defn changes [current-keys incoming-sub]
     (proxy [WebSocketHandler] []
         (onOpen [c] 
-            (sub configs 
-                (fn [config]
-                    (println (str "yo got a config " config))
-                    (send c config)))) 
+            (send c (json/write-str @current-keys))) 
         (onClose [c] (println "closed changes" c))
         (onMessage [c j] 
             (println (str "yo message " j))
