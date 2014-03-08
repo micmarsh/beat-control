@@ -15,20 +15,14 @@
         (onClose [c] (println "closed" c))
         (onMessage [c j] )))
 
-(defn changes [incoming-sub initial]
+(defn changes [incoming-sub configs]
     (proxy [WebSocketHandler] []
         (onOpen [c] 
-            (println "opened changes")
-            (send c initial)) 
+            (sub configs 
+                (fn [config]
+                    (println (str "yo got a config " config))
+                    (send c config)))) 
         (onClose [c] (println "closed changes" c))
         (onMessage [c j] 
             (println (str "yo message " j))
             (next! @incoming-sub j))))
-
-(defn see-config [configs]
-    (proxy [WebSocketHandler] []
-        (onOpen [c]
-            (sub configs (send c)))
-        (onClose [c] (println "closed" c))
-        (onMessage [c j] (println (str "yo mesage " j)))))
-
