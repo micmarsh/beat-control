@@ -14,10 +14,18 @@ Hotkeys = React.createClass
 
     displayName: 'Hotkeys'
 
+    setKeys: do ->
+        keyOrder = ['play', 'back', 'forward']
+        (keys) ->
+            settings = { }
+            for key in keyOrder
+               settings[key] = keys[key]
+            @setState {settings}
+
     setText: (which, text) ->
         {settings} = @state
         settings[which] = text
-        @setState {settings}
+        @setKeys settings
 
     appendText: (which, text) ->
         oldText = @state.settings[which]
@@ -44,12 +52,13 @@ Hotkeys = React.createClass
         changing = which
         @setText which, PLACEHOLDER
 
-    render: ->
+    render: do ->
         {div, h1, p, span, button} = React.DOM
-        div null, 
-            h1 null, "Change Ur Hotkeys"
-            for name, setting of @state.settings
-                p null, "#{name}: ", span(null, setting), button {onClick: @click name}, 'change'
+        ->            
+            div null, 
+                h1 null, "Change Ur Hotkeys"
+                for name, setting of @state.settings
+                    p null, "#{name}: ", span(null, setting), button {onClick: @click name}, 'change'
 
 hotkeys = Hotkeys()
 

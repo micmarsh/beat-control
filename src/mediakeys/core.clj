@@ -6,10 +6,9 @@
     (:require [clojure.data.json :as json])
     (:import 
            [org.webbitserver WebServer WebServers]
-           [org.webbitserver.handler StaticFileHandler]))
-
-(import [com.tulskiy.keymaster.common Provider HotKeyListener])
-(import [javax.swing KeyStroke])
+           [org.webbitserver.handler StaticFileHandler]
+           [com.tulskiy.keymaster.common Provider HotKeyListener]
+           [javax.swing KeyStroke]))
 
 (def incoming-sub (atom nil))
 (def incoming-messages

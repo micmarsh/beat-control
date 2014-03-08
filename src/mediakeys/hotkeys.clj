@@ -1,5 +1,5 @@
 (ns mediakeys.hotkeys
-    (:use [mediakeys.file :only [DEFAULT_KEYS save-keys]]
+    (:use [mediakeys.file :only [DEFAULT_KEYS save-keys!]]
            mediakeys.rx))
 
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
