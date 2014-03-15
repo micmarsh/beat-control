@@ -21,6 +21,11 @@ playlisterElements =
     pause: "a[href='#pause']"
     forward: "a[href='#next']"
     back: "a[href='#prev']"
+pandoraElements = 
+    play: '.playButton'
+    pause: '.pauseButton'
+    forward: '.skipButton'
+    back: 'noback'
 
 # youtubeElements =
 #     play: do ->
@@ -38,6 +43,7 @@ elements =
     'www.rdio.com': rdioElements
     'brandly.github.io': theListElements
     'redditplayer.phoenixforgotten.com': playlisterElements
+    'www.pandora.com': pandoraElements
     # 'youtube.com': youtubeElements
     # 'www.youtube.com': youtubeElements
 
