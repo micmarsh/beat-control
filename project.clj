@@ -12,13 +12,8 @@
                  [com.netflix.rxjava/rxjava-core "0.17.0-RC1"]
                  [com.netflix.rxjava/rxjava-clojure "0.17.0-RC1"]]
 
-  :main mediakeys.core
-  :cljsbuild {
-    :builds [{
-        ; The path to the top-level ClojureScript source directory:
-        :source-paths ["browser/cljs" ]
-        :compiler {
-          :preamble ["reagent/react.min.js"]
-          :output-to "browser/javascripts/main.js"  
-          :optimizations :whitespace
-          :pretty-print true}}]})
+  ;   ;; uberjar
+  ; :aot :all
+  ; :omit-source true
+
+  :main mediakeys.core)
