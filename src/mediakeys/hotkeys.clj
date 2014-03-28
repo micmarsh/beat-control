@@ -20,10 +20,10 @@
                         (onHotKey [event]
                             (next! s action))))))))
 
-(def provider (atom (Provider/getCurrentProvider false)))
+(def provider (atom nil));(Provider/getCurrentProvider false)))
 
 (defn key-config! [key-changes]
-    (map key-changes
+    (rmap key-changes
         (fn [key-update]
             (swap! current-keys #(merge % key-update))
             (save-keys! @current-keys)
@@ -32,11 +32,11 @@
 (defn keypress-events! [key-changes]
     (-> key-changes
         key-config!
-        (mapcat (fn [all-keys]
+        (rmapcat (fn [all-keys]
             (let [new-provider (Provider/getCurrentProvider false)
                   result (register-keys! new-provider all-keys)]
-                  (doto @provider
+                  (when @provider (doto @provider
                       (.reset)
-                      (.stop))
+                      (.stop)))
                   (reset! provider new-provider)
                   result)))))

@@ -13,7 +13,9 @@
                  [com.netflix.rxjava/rxjava-clojure "0.17.0-RC1"]]
 
   ;   ;; uberjar
-  ; :aot :all
-  ; :omit-source true
+  :aot :all
+  :omit-source true
+  :uberjar-name "hotkeys.jar"
+
 
   :main mediakeys.core)

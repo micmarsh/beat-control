@@ -7,7 +7,8 @@
            [org.webbitserver WebServer WebServers]
            [org.webbitserver.handler StaticFileHandler]
            [com.tulskiy.keymaster.common Provider HotKeyListener]
-           [javax.swing KeyStroke]))
+           [javax.swing KeyStroke])
+    (:gen-class))
 
 (def incoming-sub (atom nil))
 (def incoming-messages
@@ -15,14 +16,14 @@
         (fn [s]
             (reset! incoming-sub s))))
 (def incoming-json 
-    (map incoming-messages json/read-json))
+    (rmap incoming-messages json/read-json))
 
 (def prstr (comp println str))
 (defn idprint [thing]
     (prstr "received: " thing)
     thing)
 
-(def keypresses (-> incoming-json (map idprint) keypress-events! (map name)))
+(def keypresses (-> incoming-json (rmap idprint) keypress-events! (rmap name)))
 
 (defn -main []
   (doto (WebServers/createWebServer 8886)

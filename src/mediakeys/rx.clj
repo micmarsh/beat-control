@@ -7,9 +7,9 @@
         (~obs-fn obs#
             (rx/fn* function#))))
 
-(defn-obs mapcat .flatMap)
-(defn-obs map .map)
-(defn-obs filter .filter)
+(defn-obs rmapcat .flatMap)
+(defn-obs rmap .map)
+(defn-obs rfilter .filter)
 
 (defn sub 
     ([^Observable o fn0]
