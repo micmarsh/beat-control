@@ -41,7 +41,7 @@
                   (reset! provider new-provider)
                   result)))))
 
-(def new-provider
+(def new-provider!
     (let [provider (atom nil)]
         (fn [_]
             (when @provider
@@ -54,10 +54,33 @@
 
 (defn register-keys [^Provider provider keys]
     (let [return (chan)]
-        (doseq [[action hotkey] item
+        (doseq [[action hotkey] keys
                  keystroke [(make-keystroke hotkey)]]
                 (.register provider keystroke
                     (proxy [HotKeyListener] []
                         (onHotKey [event]
                             (put! return action)))))
+        return))
+
+; (defn mapcat< [f channel]
+;     (let [return (chan)]
+;         (go-loop []
+;             (let [value channel]
+;                 (if value)))))
+
+;  mapcat-last<
+;   somehow use an atom bound when return is made and reset it as part of the 
+;   "macro" loop somehow
+;       
+;
+(defn mapcat-last< [f channel]
+    (let [return (chan)
+          last-value (atom nil)]
+        (go-loop []
+            (reset! last-value (<! channel))
+            (go-loop []
+                ; this seems like it might leakk memory somehow
+                (>! return (<! @last-value))
+                (recur))
+            (recur))
         return))
