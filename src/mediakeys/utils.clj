@@ -1,5 +1,5 @@
 (ns mediakeys.utils
-    (:use [clojure.core.async :only [go-loop <!]]))
+    (:use [clojure.core.async :only [go-loop <! map<]]))
 
 ;courtesy of https://gist.github.com/sunilnandihalli/745654
 (defmacro defcurried [name args & body]

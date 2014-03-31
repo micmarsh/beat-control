@@ -7,6 +7,11 @@
 (defcurried send! [c message] 
     (.send c message))
 
+; TODO rename these routes! "controls" should be keypresses, since that's what
+; we're actually listening for, "changes" should be called controls should somehow standardize
+; all of the channel deps these have.
+; Also, move "seeding" of hotkey stuff into hotkeys, where it belongs
+
 (defn controls [keypresses incoming-sub]
     (proxy [WebSocketHandler] []
         (onOpen [c]
@@ -17,6 +22,8 @@
         (onMessage [c j] )))
 
 (defn changes [current-keys incoming-sub]
+    ; TODO this (or the god controller above should just subscribe
+    ; to a "keys-changed" channel you define in file.clj)
     (proxy [WebSocketHandler] []
         (onOpen [c] 
             (send! c (json/write-str "{}"))) 

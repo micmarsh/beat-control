@@ -45,7 +45,6 @@
         return))
 
 (defn keypress-channel! [key-change]
-    (println "KEYCHANGE" key-change)
     (let [old-keys (new-keys!)]
         (try
             (let [keys (new-keys! key-change)
