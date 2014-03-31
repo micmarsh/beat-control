@@ -1,7 +1,7 @@
 (ns mediakeys.core
     (:use [mediakeys.hotkeys :only [keypress-events!]]
           [mediakeys.sockets :only [controls changes]]
-          clojure.core.async)
+          [clojure.core.async :only [map< chan]])
     (:require [clojure.data.json :as json])
     (:import 
            [org.webbitserver WebServer WebServers]
@@ -25,6 +25,6 @@
     (.add "/controls" 
       (controls keypresses incoming-messages))
     (.add "/changes"
-      (changes { } (mult incoming-messages)))
+      (changes { } incoming-messages))
     (.add (StaticFileHandler. "browser/"))
     (.start)))

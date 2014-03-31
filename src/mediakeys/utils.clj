@@ -1,4 +1,5 @@
-(ns mediakeys.utils)
+(ns mediakeys.utils
+    (:use [clojure.core.async :only [go-loop <!]]))
 
 ;courtesy of https://gist.github.com/sunilnandihalli/745654
 (defmacro defcurried [name args & body]
@@ -16,3 +17,10 @@
       `(defn ~name [& args#]
          (let [helper# ~rec-funcs]
            (apply helper# args#))))))
+
+(defn dochan [channel function!]
+    (go-loop []
+        (let [value (<! channel)]
+            (when (-> value nil? not)
+                (function! value)
+                (recur)))))
