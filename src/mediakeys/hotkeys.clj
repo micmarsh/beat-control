@@ -1,6 +1,6 @@
 (ns mediakeys.hotkeys
     (:use [mediakeys.file :only [DEFAULT_KEYS save-keys!]]
-           clojure.core.async))
+          [clojure.core.async :only [chan go-loop <! pipe put!]]))
 
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
 (import [javax.swing KeyStroke])
@@ -16,17 +16,13 @@
         (go-loop []
             (let [value (<! channel)]
                 (when not-nil? value
-                    (go-loop [unflattened (f value)]
-                        (let [inner-value (<! unflattened)]
-                            (when (not-nil? inner-value)
-                                (>! return inner-value)
-                                (recur unflattened))))
+                    (pipe (f value) return)
                     (recur))))
         return))
 
 (def new-provider!
     (let [provider (atom nil)]
-        (fn yosup [ ]
+        (fn [ ]
             (when @provider
                 (doto @provider
                     (.reset)
@@ -36,11 +32,10 @@
             @provider)))
 
 (def new-keys!
-    (let [keys (atom nil)]
+    (let [keys (atom DEFAULT_KEYS)]
         (fn ([] @keys)
             ([key-update]
-                (swap! keys #(merge key-update))
-                @keys))))
+                (swap! keys #(merge % key-update))))))
 
 (defn register-keys [^Provider provider keys]
     (let [return (chan)]
@@ -53,6 +48,7 @@
         return))
 
 (defn keypress-channel! [key-change]
+    (println "KEYCHANGE" key-change)
     (let [old-keys (new-keys!)]
         (try
             (let [keys (new-keys! key-change)
