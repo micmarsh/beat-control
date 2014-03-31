@@ -1,6 +1,6 @@
 (ns mediakeys.sockets
     (:use [mediakeys.utils :only [defcurried]]
-        mediakeys.rx)
+        clojure.core.async)
     (:require [clojure.data.json :as json])
     (:import [org.webbitserver WebSocketHandler]))
 
@@ -11,16 +11,16 @@
     (proxy [WebSocketHandler] []
         (onOpen [c]
             (println "yo opened") 
-            (sub keypresses (send c))
-            (next! @incoming-sub "{}"))
+            (map< (send c) keypresses)
+            (put! incoming-sub "{}"))
         (onClose [c] (println "closed" c))
         (onMessage [c j] )))
 
 (defn changes [current-keys incoming-sub]
     (proxy [WebSocketHandler] []
         (onOpen [c] 
-            (send c (json/write-str @current-keys))) 
+            (send c (json/write-str "{}"))) 
         (onClose [c] (println "closed changes" c))
-        (onMessage [c j] 
-            (println (str "yo message " j))
-            (next! @incoming-sub j))))
+        (onMessage [c message] 
+            (println (str "yo message " message))
+            (put! incoming-sub message))))

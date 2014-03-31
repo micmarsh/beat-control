@@ -5,6 +5,10 @@
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
 (import [javax.swing KeyStroke])
 
+
+(defn make-keystroke [keystroke]
+    (KeyStroke/getKeyStroke keystroke))
+
 (def not-nil? (comp not nil?))
 
 (defn flatmap< [f channel]
@@ -61,7 +65,7 @@
             (new-keys! old-keys)
             (register-keys (new-provider!) old-keys)
             ; TODO grab that^ channel before returning it, 
-            ; and pass some error info into it
+            ; and pass some error info in
             ))))
 
 (def keypress-events! (partial flatmap< keypress-channel!))
