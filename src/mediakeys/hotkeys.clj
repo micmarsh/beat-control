@@ -26,7 +26,7 @@
 
 (def new-provider!
     (let [provider (atom nil)]
-        (fn [ ]
+        (fn yosup [ ]
             (when @provider
                 (doto @provider
                     (.reset)
@@ -37,9 +37,10 @@
 
 (def new-keys!
     (let [keys (atom nil)]
-        (fn [key-update]
-            (swap! keys #(merge key-update))
-            @keys)))
+        (fn ([] @keys)
+            ([key-update]
+                (swap! keys #(merge key-update))
+                @keys))))
 
 (defn register-keys [^Provider provider keys]
     (let [return (chan)]
@@ -51,10 +52,10 @@
                             (put! return action)))))
         return))
 
-(defn keypress-channel! [key-changes]
-    (let [old-keys (new-keys! { })]
+(defn keypress-channel! [key-change]
+    (let [old-keys (new-keys!)]
         (try
-            (let [keys (new-keys! key-changes)
+            (let [keys (new-keys! key-change)
                   provider (new-provider!)
                   channel (register-keys provider keys)]
                 (save-keys! keys)
