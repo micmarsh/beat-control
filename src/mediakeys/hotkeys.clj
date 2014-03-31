@@ -77,10 +77,23 @@
     (let [return (chan)
           last-value (atom nil)]
         (go-loop []
-            (reset! last-value (<! channel))
+            (reset! last-value (f (<! channel)))
             (go-loop []
-                ; this seems like it might leakk memory somehow
+                ; this seems like it might leak memory somehow, and won't actually do what
+                ; you want anyway, since @last-value is not a mutable variable
                 (>! return (<! @last-value))
                 (recur))
             (recur))
         return))
+
+(def numbers (chan))
+
+(doseq [i (range 10)]
+    (put! numbers i))
+
+(defn silly-double [number]
+    (let [c (chan)]
+        (put! c (* 2 number))
+        c))
+
+(def dubs (mapcat-last< silly-double numbers))
