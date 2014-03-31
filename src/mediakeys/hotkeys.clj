@@ -1,5 +1,6 @@
 (ns mediakeys.hotkeys
     (:use [mediakeys.file :only [DEFAULT_KEYS save-keys!]]
+          [mediakeys.utils :only [dochan]]
           [clojure.core.async :only [chan go-loop <! pipe put!]]))
 
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
@@ -13,11 +14,7 @@
 
 (defn flatmap< [f channel]
     (let [return (chan)]
-        (go-loop []
-            (let [value (<! channel)]
-                (when not-nil? value
-                    (pipe (f value) return)
-                    (recur))))
+        (dochan channel #(pipe (f %) return))
         return))
 
 (def new-provider!
