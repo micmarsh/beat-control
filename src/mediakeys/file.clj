@@ -6,7 +6,6 @@
 (def LOCATION (str DIR "keys"))
 (def DEFAULT {
         :play "control 1"
-        ;TODO look up actual key combinations
         :forward "control 8"
         :back "control 7"
     })

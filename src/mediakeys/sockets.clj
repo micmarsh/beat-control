@@ -12,12 +12,11 @@
 ; all of the channel deps these have.
 ; Also, move "seeding" of hotkey stuff into hotkeys, where it belongs
 
-(defn controls [keypresses incoming-sub]
+(defn keypresses [incoming]
     (proxy [WebSocketHandler] []
         (onOpen [c]
             (println "yo opened") 
-            (dochan keypresses (send! c))
-            (put! incoming-sub "{}"))
+            (dochan incoming (send! c)))
         (onClose [c] (println "closed" c))
         (onMessage [c j] )))
 

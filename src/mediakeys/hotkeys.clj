@@ -1,6 +1,6 @@
 (ns mediakeys.hotkeys
     (:use [mediakeys.file :only [DEFAULT_KEYS save-keys!]]
-          [mediakeys.utils :only [dochan]]
+          [mediakeys.utils :only [dochan defcurried]]
           [clojure.core.async :only [chan go-loop <! pipe put!]]))
 
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
@@ -12,7 +12,7 @@
 
 (def not-nil? (comp not nil?))
 
-(defn flatmap< [f channel]
+(defcurried flatmap< [f channel]
     (let [return (chan)]
         (dochan channel #(pipe (f %) return))
         return))
@@ -61,5 +61,11 @@
             ; and pass some error info in
             ))))
 
-(def keypress-events! (partial flatmap< keypress-channel!))
+(defcurried seed-channel! [seed channel]
+    (put! channel seed)
+    channel)
 
+(def keypress-events! 
+    (comp
+        (seed-channel! "{}")
+        (flatmap< keypress-channel!)))

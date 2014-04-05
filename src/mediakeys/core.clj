@@ -1,6 +1,6 @@
 (ns mediakeys.core
     (:use [mediakeys.hotkeys :only [keypress-events!]]
-          [mediakeys.sockets :only [controls changes]]
+          [mediakeys.sockets :only [keypresses changes]]
           [clojure.core.async :only [map< chan]])
     (:require [clojure.data.json :as json])
     (:import 
@@ -18,12 +18,12 @@
     (prstr "received: " thing)
     thing)
 
-(def keypresses (->> incoming-json (map< idprint) keypress-events! (map< name)))
+(def user-keys (->> incoming-json (map< idprint) keypress-events! (map< name)))
 
 (defn -main []
   (doto (WebServers/createWebServer 8886)
     (.add "/controls" 
-      (controls keypresses incoming-messages))
+      (keypresses user-keys))
     (.add "/changes"
       (changes { } incoming-messages))
     (.add (StaticFileHandler. "browser/"))
