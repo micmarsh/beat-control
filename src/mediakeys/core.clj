@@ -7,7 +7,8 @@
            [org.webbitserver WebServer WebServers]
            [org.webbitserver.handler StaticFileHandler]
            [com.tulskiy.keymaster.common Provider HotKeyListener]
-           [javax.swing KeyStroke]))
+           [javax.swing KeyStroke])
+    (:gen-class))
 
 (def incoming-messages (chan))
 (def incoming-json 
