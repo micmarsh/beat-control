@@ -20,7 +20,7 @@
         (onClose [c] (println "closed" c))
         (onMessage [c j] )))
 
-(defn changes [current-keys incoming-sub]
+(defn controls [changes]
     ; TODO this (or the god controller above should just subscribe
     ; to a "keys-changed" channel you define in file.clj)
     (proxy [WebSocketHandler] []
@@ -29,4 +29,4 @@
         (onClose [c] (println "closed changes" c))
         (onMessage [c message] 
             (println (str "yo message " message))
-            (put! incoming-sub message))))
+            (put! changes message))))

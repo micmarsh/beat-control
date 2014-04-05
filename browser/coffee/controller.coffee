@@ -23,7 +23,7 @@ press = handlePlayPause (button) ->
     singleButton.click() # it's probably helpful to throw exceptions here
 
 do open = (delay = 1000) ->
-    connection = new WebSocket('ws://localhost:8886/controls')
+    connection = new WebSocket('ws://localhost:8886/keypresses')
     connection.onopen = -> 
         delay = 1000
         console.log 'connected to controls'
