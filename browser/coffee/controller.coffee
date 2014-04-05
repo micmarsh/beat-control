@@ -30,7 +30,7 @@ do open = (delay = 1000) ->
     connection.onmessage = ({data}) -> press data
     connection.onclose = -> setTimeout ->
         newDelay = delay * 1.5
-        console.log "server not availabe, trying again in #{newDelay} milliseconds"
+        console.log "server not available, trying again in #{newDelay} milliseconds"
         open newDelay
     , delay
 
