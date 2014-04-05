@@ -62,6 +62,7 @@
             ))))
 
 (defcurried seed-channel! [seed channel]
+    (println "yo seedding channel")
     (put! channel seed)
     channel)
 
@@ -69,3 +70,8 @@
     (comp
         (seed-channel! "{}")
         (flatmap< keypress-channel!)))
+
+(defn keypress-events! [key-changes]
+    (let [result (flatmap< keypress-channel! key-changes)]
+        (seed-channel! "{}" key-changes)
+        result))
