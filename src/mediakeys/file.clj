@@ -10,14 +10,16 @@
         :forward "control 8"
         :back "control 7"
     })
+
+(def current-keys (chan))
+
 (def DEFAULT_KEYS
     (try (let [keys (load-file LOCATION)]
-            (put! save-keys keys)
+            (put! current-keys keys)
             keys)
         (catch java.io.FileNotFoundException e
             DEFAULT)))
 
-(def saved-keys (chan))
 (defn save-keys! [keys]
-    (put! saved-keys keys)
+    (put! current-keys keys)
     (spit LOCATION keys))

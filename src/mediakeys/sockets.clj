@@ -20,7 +20,7 @@
     ; to a "keys-changed" channel you define in file.clj)
     (proxy [WebSocketHandler] []
         (onOpen [c] 
-            (dochan incoming-changes (send! c))))
+            (dochan incoming-changes (send! c)))
         (onClose [c] (println "closed changes" c))
         (onMessage [c message] 
             (println (str "yo message " message))
