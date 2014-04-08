@@ -1,4 +1,6 @@
-(ns mediakeys.file)
+(ns mediakeys.file
+    (:use [mediakeys.channels :only [update-keys]]
+          [clojure.core.async :only [chan put!]]))
 
 (def HOME (System/getProperty "user.home"))
 (def DIR (str HOME "/.mediakeys/"))
@@ -6,14 +8,17 @@
 (def LOCATION (str DIR "keys"))
 (def DEFAULT {
         :play "control 1"
-        ;TODO look up actual key combinations
         :forward "control 8"
         :back "control 7"
     })
+
 (def DEFAULT_KEYS
-    (try (load-file LOCATION)
+    (try (let [keys (load-file LOCATION)]
+            (put! update-keys keys)
+            keys)
         (catch java.io.FileNotFoundException e
             DEFAULT)))
 
-; yeah, some typing here would be great
-(def save-keys! (partial spit LOCATION))
+(defn save-keys! [keys]
+    (put! update-keys keys)
+    (spit LOCATION keys))

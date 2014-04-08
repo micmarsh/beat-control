@@ -9,13 +9,11 @@
                  [org.clojure/data.json "0.2.4"]
                  [org.webbitserver/webbit "0.4.3"]
                  [com.github.tulskiy/jkeymaster "1.1"]
-                 [com.netflix.rxjava/rxjava-core "0.17.0-RC1"]
-                 [com.netflix.rxjava/rxjava-clojure "0.17.0-RC1"]]
+                 [org.clojure/core.async "0.1.278.0-76b25b-alpha"]]
 
-  ;   ;; uberjar
+    ;; uberjar
+  :uberjar-name "hotkeys.jar"
   :aot :all
   :omit-source true
-  :uberjar-name "hotkeys.jar"
-
 
   :main mediakeys.core)

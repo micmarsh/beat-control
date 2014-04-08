@@ -1,26 +1,27 @@
 (ns mediakeys.sockets
-    (:use [mediakeys.utils :only [defcurried]]
-        mediakeys.rx)
+    (:use [mediakeys.utils :only [defcurried dochan]]
+          [clojure.core.async :only [put!]])
     (:require [clojure.data.json :as json])
     (:import [org.webbitserver WebSocketHandler]))
 
 (defcurried send! [c message] 
     (.send c message))
 
-(defn controls [keypresses incoming-sub]
+(defn keypresses [incoming]
     (proxy [WebSocketHandler] []
         (onOpen [c]
             (println "yo opened") 
-            (sub keypresses (send! c))
-            (next! @incoming-sub "{}"))
+            (dochan incoming (send! c)))
         (onClose [c] (println "closed" c))
         (onMessage [c j] )))
 
-(defn changes [current-keys incoming-sub]
+(defn controls [new-keys incoming-changes]
+    ; TODO this (or the god controller above should just subscribe
+    ; to a "keys-changed" channel you define in file.clj)
     (proxy [WebSocketHandler] []
-        (onOpen [c] 
-            (send! c (json/write-str @current-keys))) 
+        (onOpen [c]
+            (dochan incoming-changes (send! c)))
         (onClose [c] (println "closed changes" c))
-        (onMessage [c j] 
-            (println (str "yo message " j))
-            (next! @incoming-sub j))))
+        (onMessage [c message] 
+            (println (str "yo message " message))
+            (put! new-keys message))))

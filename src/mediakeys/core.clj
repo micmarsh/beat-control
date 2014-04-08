@@ -1,7 +1,8 @@
 (ns mediakeys.core
-    (:use [mediakeys.hotkeys :only [keypress-events! key-config! current-keys]]
-          [mediakeys.sockets :only [controls changes]]
-          mediakeys.rx)
+    (:use [mediakeys.hotkeys :only [keypress-events!]]
+          [mediakeys.sockets :only [keypresses controls]]
+          [mediakeys.channels :only [update-keys]]
+          [clojure.core.async :only [map< chan]])
     (:require [clojure.data.json :as json])
     (:import 
            [org.webbitserver WebServer WebServers]
@@ -10,26 +11,22 @@
            [javax.swing KeyStroke])
     (:gen-class))
 
-(def incoming-sub (atom nil))
-(def incoming-messages
-    (observable 
-        (fn [s]
-            (reset! incoming-sub s))))
-(def incoming-json 
-    (rmap incoming-messages json/read-json))
+(def incoming-messages (chan))
+(def incoming-json
+    (map< json/read-json incoming-messages))
 
 (def prstr (comp println str))
 (defn idprint [thing]
     (prstr "received: " thing)
     thing)
 
-(def keypresses (-> incoming-json (rmap idprint) keypress-events! (rmap name)))
+(def user-keys (->> incoming-json (map< idprint) keypress-events! (map< name)))
 
 (defn -main []
   (doto (WebServers/createWebServer 8886)
-    (.add "/controls" 
-      (controls keypresses incoming-sub))
-    (.add "/changes"
-      (changes current-keys incoming-sub))
+    (.add "/keypresses" 
+      (keypresses user-keys))
+    (.add "/controls"
+      (controls incoming-messages update-keys))
     (.add (StaticFileHandler. "browser/"))
     (.start)))

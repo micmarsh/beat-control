@@ -23,14 +23,14 @@ press = handlePlayPause (button) ->
     singleButton.click() # it's probably helpful to throw exceptions here
 
 do open = (delay = 1000) ->
-    connection = new WebSocket('ws://localhost:8886/controls')
+    connection = new WebSocket('ws://localhost:8886/keypresses')
     connection.onopen = -> 
         delay = 1000
         console.log 'connected to controls'
     connection.onmessage = ({data}) -> press data
     connection.onclose = -> setTimeout ->
         newDelay = delay * 1.5
-        console.log "server not availabe, trying again in #{newDelay} milliseconds"
+        console.log "server not available, trying again in #{newDelay} milliseconds"
         open newDelay
     , delay
 
