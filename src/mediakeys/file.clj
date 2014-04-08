@@ -1,5 +1,6 @@
 (ns mediakeys.file
-    (:use [clojure.core.async :only [chan put!]]))
+    (:use [mediakeys.channels :only [update-keys]]
+          [clojure.core.async :only [chan put!]]))
 
 (def HOME (System/getProperty "user.home"))
 (def DIR (str HOME "/.mediakeys/"))
@@ -10,8 +11,6 @@
         :forward "control 8"
         :back "control 7"
     })
-
-(def update-keys (chan))
 
 (def DEFAULT_KEYS
     (try (let [keys (load-file LOCATION)]

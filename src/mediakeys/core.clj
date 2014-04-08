@@ -1,7 +1,7 @@
 (ns mediakeys.core
     (:use [mediakeys.hotkeys :only [keypress-events!]]
           [mediakeys.sockets :only [keypresses controls]]
-          [mediakeys.file :only [update-keys]]
+          [mediakeys.channels :only [update-keys]]
           [clojure.core.async :only [map< chan]])
     (:require [clojure.data.json :as json])
     (:import 
