@@ -39,6 +39,7 @@
     (let [return (chan)]
         (doseq [[action hotkey] keys
                  keystroke [(make-keystroke hotkey)]]
+                 (println make-keystroke)
                 (.register provider keystroke
                     (proxy [HotKeyListener] []
                         (onHotKey [event]
