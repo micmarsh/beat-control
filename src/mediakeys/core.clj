@@ -1,7 +1,7 @@
 (ns mediakeys.core
     (:use [mediakeys.hotkeys :only [keypress-events!]]
-          [mediakeys.sockets :only [keypresses controls]]
-          [mediakeys.channels :only [update-keys]]
+          [mediakeys.sockets :only [keypresses controls errors]]
+          [mediakeys.channels :only [update-keys keymaster-errors]]
           [clojure.core.async :only [map< chan]])
     (:require [clojure.data.json :as json])
     (:import 
@@ -11,22 +11,15 @@
            [javax.swing KeyStroke])
     (:gen-class))
 
-(def incoming-messages (chan))
-(def incoming-json
-    (map< json/read-json incoming-messages))
-
-(def prstr (comp println str))
-(defn idprint [thing]
-    (prstr "received: " thing)
-    thing)
-
-(def user-keys (->> incoming-json (map< idprint) keypress-events! (map< name)))
-
 (defn -main []
+  (let [incoming-messages (chan) 
+        user-keys (->> (map< json/read-json) keypress-events! (map< name))]
   (doto (WebServers/createWebServer 8886)
     (.add "/keypresses" 
       (keypresses user-keys))
     (.add "/controls"
       (controls incoming-messages update-keys))
+    (.add "/errors"
+      (errors keymaster-errors))
     (.add (StaticFileHandler. "browser/"))
     (.start)))
