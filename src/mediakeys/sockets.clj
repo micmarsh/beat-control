@@ -16,7 +16,6 @@
         (onMessage [c j] )))
 
 (defn controls [new-keys incoming-changes]
-    ; TODO this (or the god controller above should just su
     (proxy [WebSocketHandler] []
         (onOpen [c]
             (dochan incoming-changes (send! c)))

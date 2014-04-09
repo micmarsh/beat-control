@@ -13,7 +13,8 @@
 
 (defn -main []
   (let [incoming-messages (chan) 
-        user-keys (->> (map< json/read-json) keypress-events! (map< name))]
+        user-keys (->> incoming-messages
+          (map< json/read-json) keypress-events! (map< name))]
   (doto (WebServers/createWebServer 8886)
     (.add "/keypresses" 
       (keypresses user-keys))
@@ -22,4 +23,4 @@
     (.add "/errors"
       (errors keymaster-errors))
     (.add (StaticFileHandler. "browser/"))
-    (.start)))
+    (.start))))
