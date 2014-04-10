@@ -29,4 +29,4 @@
         (onOpen [c]
             (dochan incoming-errors (send! c)))
         (onClose [c])
-        (onMessage[c])))
+        (onMessage[c j])))
