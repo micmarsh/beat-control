@@ -55,7 +55,9 @@
             (let [keys (new-keys! key-change)
                   provider (new-provider!)
                   channel (register-keys provider keys old-keys)]
-                ; shouldn't get to save keys, BUT IT IS
+                ; hmmmm, this won't save correctly with errors, 
+                ; the errors will just set and set the wrong thing.
+                ; hmmmmmmmmmmmmmm
                 (save-keys! keys)
                 channel)))
 
