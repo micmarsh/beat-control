@@ -66,11 +66,6 @@
     (put! channel seed)
     channel)
 
-(def keypress-events! 
-    (comp
-        (seed-channel! "{}")
-        (flatmap< keypress-channel!)))
-
 (defn keypress-events! [key-changes]
     (let [result (flatmap< keypress-channel! key-changes)]
         (seed-channel! "{}" key-changes)
