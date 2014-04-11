@@ -35,31 +35,31 @@
             ([key-update]
                 (swap! keys #(merge % key-update))))))
 
-(defn with-error! [action hotkey old-keys]
-    (put! keymaster-errors {:action action :hotkey hotkey})
-    (-> action old-keys make-keystroke))
-
-(defn register-keys [^Provider provider keys old-keys]
-    (let [return (chan)]
+(defn register-keys [^Provider provider keys]
+    (let [return (chan)
+          failed (atom false)]
         (doseq [[action hotkey] keys
-                 keystroke [(or (make-keystroke hotkey)
-                                (with-error! action hotkey old-keys))]]
-                (.register provider keystroke
-                    (proxy [HotKeyListener] []
-                        (onHotKey [event]
-                            (put! return action)))))
-        return))
+                 keystroke [(make-keystroke hotkey)]]
+                (if keystroke
+                    (.register provider keystroke
+                        (proxy [HotKeyListener] []
+                            (onHotKey [event]
+                                (put! return action))))
+                    (reset! failed true)))
+        (if @failed
+            nil
+            return)))
 
 (defn keypress-channel! [key-change]
     (let [old-keys (new-keys!)]
             (let [keys (new-keys! key-change)
                   provider (new-provider!)
-                  channel (register-keys provider keys old-keys)]
-                ; hmmmm, this won't save correctly with errors, 
-                ; the errors will just set and set the wrong thing.
-                ; hmmmmmmmmmmmmmm
-                (save-keys! keys)
-                channel)))
+                  channel (register-keys provider keys)]
+                (if channel
+                    (do 
+                        (save-keys! keys)
+                        channel)
+                    (register-keys (new-provider!) old-keys)))))
 
 (defcurried seed-channel! [seed channel]
     (println "yo seedding channel")
