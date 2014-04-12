@@ -13,6 +13,11 @@
 
 (def not-nil? (comp not nil?))
 
+(defn allowed? [change]
+    (let [key-val (first change)
+          [action hotkey] key-val]
+        (-> hotkey make-keystroke not-nil?)))
+
 (defcurried flatmap< [f channel]
     (let [return (chan)]
         (dochan channel #(pipe (f %) return))
@@ -36,36 +41,25 @@
                 (swap! keys #(merge % key-update))))))
 
 (defn register-keys [^Provider provider keys]
-    (let [return (chan)
-          failed (atom { })]
+    (let [return (chan)]
         (doseq [[action hotkey] keys
                  keystroke [(make-keystroke hotkey)]]
-                (if keystroke
                     (.register provider keystroke
                         (proxy [HotKeyListener] []
                             (onHotKey [event]
-                                (put! return action))))
-                    (swap! failed assoc action hotkey)))
-        (if (empty? @failed)
-            return
-            @failed)))
+                                (put! return action)))))
+            return))
+
 
 (defn keypress-channel! [key-change]
     (let [old-keys (new-keys!)]
             (let [keys (new-keys! key-change)
                   provider (new-provider!)
                   channel (register-keys provider keys)]
-                (if (map? channel)
-                    (do 
-                        (println "heyo")
-                        (put! keymaster-errors channel)
-                        (register-keys (new-provider!) old-keys))
-                    (do 
                         (save-keys! keys)
-                        channel)))))
+                        channel)))
 
 (defcurried seed-channel! [seed channel]
-    (println "yo seedding channel")
     (put! channel seed)
     channel)
 

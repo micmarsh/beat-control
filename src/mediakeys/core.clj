@@ -1,8 +1,8 @@
 (ns mediakeys.core
-    (:use [mediakeys.hotkeys :only [keypress-events!]]
+    (:use [mediakeys.hotkeys :only [keypress-events! allowed?]]
           [mediakeys.sockets :only [keypresses controls errors]]
-          [mediakeys.channels :only [update-keys keymaster-errors]]
-          [clojure.core.async :only [map< chan]])
+          [mediakeys.channels :only [update-keys]]
+          [clojure.core.async :only [map< chan split]])
     (:require [clojure.data.json :as json])
     (:import 
            [org.webbitserver WebServer WebServers]
@@ -12,15 +12,15 @@
     (:gen-class))
 
 (defn -main []
-  (let [incoming-messages (chan) 
-        user-keys (->> incoming-messages
-          (map< json/read-json) keypress-events! (map< name))]
+  (let [incoming-messages (map< json/read-json (chan))
+        [changes change-errors] (split allowed? incoming-messages)
+        user-keys (keypress-events! changes)]
   (doto (WebServers/createWebServer 8886)
     (.add "/keypresses" 
       (keypresses user-keys))
     (.add "/controls"
       (controls incoming-messages update-keys))
     (.add "/errors"
-      (errors keymaster-errors))
+      (errors change-errors))
     (.add (StaticFileHandler. "browser/"))
     (.start))))
