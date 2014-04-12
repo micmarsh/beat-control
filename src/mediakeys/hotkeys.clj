@@ -1,6 +1,7 @@
 (ns mediakeys.hotkeys
     (:use [mediakeys.file :only [DEFAULT_KEYS save-keys!]]
           [mediakeys.utils :only [dochan defcurried]]
+          [mediakeys.channels :only [keymaster-errors]]
           [clojure.core.async :only [chan go-loop <! pipe put!]]))
 
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])
@@ -35,31 +36,33 @@
                 (swap! keys #(merge % key-update))))))
 
 (defn register-keys [^Provider provider keys]
-    (let [return (chan)]
+    (let [return (chan)
+          failed (atom { })]
         (doseq [[action hotkey] keys
                  keystroke [(make-keystroke hotkey)]]
-                (.register provider keystroke
-                    (proxy [HotKeyListener] []
-                        (onHotKey [event]
-                            (put! return action)))))
-        return))
+                (if keystroke
+                    (.register provider keystroke
+                        (proxy [HotKeyListener] []
+                            (onHotKey [event]
+                                (put! return action))))
+                    (swap! failed assoc action hotkey)))
+        (if (empty? @failed)
+            return
+            @failed)))
 
 (defn keypress-channel! [key-change]
     (let [old-keys (new-keys!)]
-        (try
             (let [keys (new-keys! key-change)
                   provider (new-provider!)
                   channel (register-keys provider keys)]
-                (save-keys! keys)
-                channel)
-        (catch java.lang.Exception e
-            (println "here's the exception, catch it more specifically")
-            (.printStackTrace e)
-            (new-keys! old-keys)
-            (register-keys (new-provider!) old-keys)
-            ; TODO grab that^ channel before returning it, 
-            ; and pass some error info in
-            ))))
+                (if (map? channel)
+                    (do 
+                        (println "heyo")
+                        (put! keymaster-errors channel)
+                        (register-keys (new-provider!) old-keys))
+                    (do 
+                        (save-keys! keys)
+                        channel)))))
 
 (defcurried seed-channel! [seed channel]
     (println "yo seedding channel")

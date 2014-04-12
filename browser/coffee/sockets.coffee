@@ -2,13 +2,23 @@
 PREFIX = 'ws://localhost:8886/'
 changes = null
 
-do open = (delay = 1000)->
+reopen = (opener, delay) -> ->
+    setTimeout ->
+        opener delay * 1.5
+    , 100 
+
+do openControls = (delay = 1000)->
     changes = new WebSocket PREFIX + 'controls'
     changes.onmessage = (message) ->
         {data} = message
         settings = JSON.parse data
         hotkeys.setKeys settings
-    changes.onclose = ->
-        setTimeout ->
-            open delay * 1.5
-        , 100
+    changes.onclose = reopen openControls, delay
+
+do openErrors = (delay = 1000) ->
+    errors = new WebSocket PREFIX + 'errors'
+    errors.onmessage = (message) ->
+        {data} = message
+        console.log "woah an error!"
+        console.log data
+    errors.onclose = reopen openErrors, delay

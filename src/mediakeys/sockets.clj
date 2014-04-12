@@ -16,8 +16,6 @@
         (onMessage [c j] )))
 
 (defn controls [new-keys incoming-changes]
-    ; TODO this (or the god controller above should just subscribe
-    ; to a "keys-changed" channel you define in file.clj)
     (proxy [WebSocketHandler] []
         (onOpen [c]
             (dochan incoming-changes (send! c)))
@@ -25,3 +23,10 @@
         (onMessage [c message] 
             (println (str "yo message " message))
             (put! new-keys message))))
+
+(defn errors [incoming-errors]
+    (proxy [WebSocketHandler] []
+        (onOpen [c]
+            (dochan incoming-errors (send! c)))
+        (onClose [c])
+        (onMessage[c j])))
