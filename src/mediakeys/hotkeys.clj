@@ -37,7 +37,7 @@
 
 (defn register-keys [^Provider provider keys]
     (let [return (chan)
-          failed (atom false)]
+          failed (atom { })]
         (doseq [[action hotkey] keys
                  keystroke [(make-keystroke hotkey)]]
                 (if keystroke
@@ -45,21 +45,24 @@
                         (proxy [HotKeyListener] []
                             (onHotKey [event]
                                 (put! return action))))
-                    (reset! failed true)))
-        (if @failed
-            nil
-            return)))
+                    (swap! failed assoc action hotkey)))
+        (if (empty? @failed)
+            return
+            @failed)))
 
 (defn keypress-channel! [key-change]
     (let [old-keys (new-keys!)]
             (let [keys (new-keys! key-change)
                   provider (new-provider!)
                   channel (register-keys provider keys)]
-                (if channel
+                (if (map? channel)
+                    (do 
+                        (println "heyo")
+                        (put! keymaster-errors channel)
+                        (register-keys (new-provider!) old-keys))
                     (do 
                         (save-keys! keys)
-                        channel)
-                    (register-keys (new-provider!) old-keys)))))
+                        channel)))))
 
 (defcurried seed-channel! [seed channel]
     (println "yo seedding channel")

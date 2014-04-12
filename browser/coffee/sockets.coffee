@@ -16,9 +16,9 @@ do openControls = (delay = 1000)->
     changes.onclose = reopen openControls, delay
 
 do openErrors = (delay = 1000) ->
-    changes = new WebSocket PREFIX + 'errors'
-    changes.onmessage = (message) ->
+    errors = new WebSocket PREFIX + 'errors'
+    errors.onmessage = (message) ->
         {data} = message
         console.log "woah an error!"
         console.log data
-    changes.onclose = reopen openErrors, delay
+    errors.onclose = reopen openErrors, delay
