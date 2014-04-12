@@ -13,13 +13,12 @@
 
 (def not-nil? (comp not nil?))
 
-(defn allowed? [change] true)
-    ; (println change)
-    ; (let [key-val (first change)
-    ;       [action hotkey] key-val]
-    ;     (if hotkey
-    ;         (-> hotkey make-keystroke not-nil?)
-    ;         false)))
+(defn allowed? [change]
+    (let [key-val (first change)
+          [action hotkey] key-val]
+        (if hotkey
+            (-> hotkey make-keystroke not-nil?)
+            false)))
 
 (defcurried flatmap< [f channel]
     (let [return (chan)]
@@ -55,12 +54,11 @@
 
 
 (defn keypress-channel! [key-change]
-    (let [old-keys (new-keys!)]
-            (let [keys (new-keys! key-change)
-                  provider (new-provider!)
-                  channel (register-keys provider keys)]
-                        (save-keys! keys)
-                        channel)))
+   (let [keys (new-keys! key-change)
+         provider (new-provider!)
+         channel (register-keys provider keys)]
+            (save-keys! keys)
+            channel))
 
 (defcurried seed-channel! [seed channel]
     (put! channel seed)
@@ -68,5 +66,5 @@
 
 (defn keypress-events! [key-changes]
     (let [result (flatmap< keypress-channel! key-changes)]
-        (seed-channel! "{}" key-changes)
+        (seed-channel! { } key-changes)
         result))
