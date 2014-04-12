@@ -16,7 +16,9 @@
 (defn allowed? [change]
     (let [key-val (first change)
           [action hotkey] key-val]
-        (-> hotkey make-keystroke not-nil?)))
+        (if hotkey
+            (-> hotkey make-keystroke not-nil?)
+            false)))
 
 (defcurried flatmap< [f channel]
     (let [return (chan)]
