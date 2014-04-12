@@ -12,8 +12,9 @@
     (:gen-class))
 
 (defn -main []
-  (let [incoming-messages (map< json/read-json (chan))
-        [changes change-errors] (split allowed? incoming-messages)
+  (let [incoming-messages (chan)
+        incoming-json (map< json/read-json incoming-messages)
+        [changes change-errors] (split allowed? incoming-json)
         user-keys (keypress-events! changes)]
   (doto (WebServers/createWebServer 8886)
     (.add "/keypresses" 

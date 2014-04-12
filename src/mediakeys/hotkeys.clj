@@ -13,12 +13,13 @@
 
 (def not-nil? (comp not nil?))
 
-(defn allowed? [change]
-    (let [key-val (first change)
-          [action hotkey] key-val]
-        (if hotkey
-            (-> hotkey make-keystroke not-nil?)
-            false)))
+(defn allowed? [change] true)
+    ; (println change)
+    ; (let [key-val (first change)
+    ;       [action hotkey] key-val]
+    ;     (if hotkey
+    ;         (-> hotkey make-keystroke not-nil?)
+    ;         false)))
 
 (defcurried flatmap< [f channel]
     (let [return (chan)]
