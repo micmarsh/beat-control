@@ -29,8 +29,13 @@ Hotkeys = React.createClass
 
     setError: (which, error) ->
         {errors} = @state
-        errors[which] = error
+        errors[which] = "Error: Can't set key combination: #{error}"
         @setState {errors}
+        setTimeout =>
+            errors[which] = ''
+            @setState {errors}
+        , 1500
+
 
     appendText: (which, text) ->
         oldText = @state.settings[which]
