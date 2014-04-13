@@ -86,7 +86,23 @@ Hotkeys = React.createClass
                         if @state.errors[name] then p({className: 'error'}, @state.errors[name]) else ''
                     ]
 
-hotkeys = Hotkeys()
+LinkButton = React.createClass
+    displayName: 'LinkButton'
 
-React.renderComponent hotkeys, document.getElementById 'mainDisplay'
+    click: ->
+        chrome.tabs.create {url: "http://localhost:8888"}
+
+    render: do ->
+        {button, div} = React.DOM
+        ->
+            div {id: 'main'},
+                button {onClick: @click}, "Adjust Settings"
+
+if window.chrome and chrome.runtime and chrome.runtime.id
+    do ->
+        button = LinkButton()
+        React.renderComponent button, document.getElementById 'mainDisplay'
+else
+    hotkeys = Hotkeys()
+    React.renderComponent hotkeys, document.getElementById 'mainDisplay'
 
