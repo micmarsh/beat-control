@@ -11,37 +11,22 @@
         (tap mult return)
         return))
 
-(def channels (atom { }))
-(defn start! [conn channel]
-    (swap! channels assoc 
-        (.toString conn) channel)
-    (print @channels))
-(defn stop! [conn]
-    (close! (@channels conn))
-    (swap! channels dissoc 
-        (.toString conn))
-    (print @channels))
-
 (defn keypresses [incoming]
     (proxy [WebSocketHandler] []
         (onOpen [c]
             (let [channel (clone incoming)]
-                (dochan channel (send! c))
-                (start! c channel)))
+                (dochan channel (send! c))))
         (onClose [c] 
-            (println "closed" c)
-            (stop! c))
+            (println "closed" c))
         (onMessage [c j] )))
 
 (defn controls [new-keys incoming-changes]
     (proxy [WebSocketHandler] []
         (onOpen [c]
             (let [channel (clone incoming-changes)]
-                (dochan channel (send! c))
-                (start! c channel)))
+                (dochan channel (send! c))))
         (onClose [c] 
-            (println "closed changes" c)
-            (stop! c))
+            (println "closed changes" c))
         (onMessage [c message] 
             (put! new-keys message))))
 
@@ -49,8 +34,6 @@
     (proxy [WebSocketHandler] []
         (onOpen [c]
            (let [channel (clone incoming-errors)]
-                (dochan channel (send! c))
-                (start! c channel)))
-        (onClose [c]
-            (stop! c))
+                (dochan channel (send! c))))
+        (onClose [c])
         (onMessage[c j])))
