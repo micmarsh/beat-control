@@ -16,7 +16,7 @@
         incoming-json (map< json/read-json incoming-messages)
         [changes change-errors] (split allowed? incoming-json)
         user-keys (keypress-events! changes)]
-  (doto (WebServers/createWebServer 8886)
+  (doto (WebServers/createWebServer 8888)
     (.add "/keypresses" 
       (keypresses user-keys))
     (.add "/controls"
