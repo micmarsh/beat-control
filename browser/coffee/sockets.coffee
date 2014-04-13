@@ -1,5 +1,5 @@
 
-PREFIX = 'ws://localhost:8886/'
+PREFIX = 'ws://localhost:8888/'
 changes = null
 
 reopen = (opener, delay) -> ->

@@ -1,7 +1,6 @@
 (ns mediakeys.sockets
     (:use [mediakeys.utils :only [defcurried dochan]]
           [clojure.core.async :only [put!]])
-    (:require [clojure.data.json :as json])
     (:import [org.webbitserver WebSocketHandler]))
 
 (defcurried send! [c message] 

@@ -20,8 +20,9 @@
     (.add "/keypresses" 
       (keypresses user-keys))
     (.add "/controls"
-      (controls incoming-messages update-keys))
+      (controls incoming-messages 
+        (map< json/write-str update-keys)))
     (.add "/errors"
-      (errors change-errors))
+      (errors (map< json/write-str change-errors)))
     (.add (StaticFileHandler. "browser/"))
     (.start))))
