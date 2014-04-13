@@ -6,7 +6,7 @@ compatibleSites =
     'The List': 'brandly.github.io/thelist'
     'Reddit Playlister': 'redditplayer.phoenixforgotten.com'
 
-listItems = for name, url in compatibleSites
+listItems = for name, url of compatibleSites
     "<li><a href='http://#{url}'>#{name}</a></li>"
 
 list = "<ul>#{listItems.join('')}</ul>"
