@@ -15,7 +15,7 @@
   (let [incoming-messages (chan)
         incoming-json (map< json/read-json incoming-messages)
         [changes change-errors] (split allowed? incoming-json)
-        user-keys (keypress-events! changes)]
+        user-keys (->> changes keypress-events! (map< name))]
   (doto (WebServers/createWebServer 8888)
     (.add "/keypresses" 
       (keypresses user-keys))
