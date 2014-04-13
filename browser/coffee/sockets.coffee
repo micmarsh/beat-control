@@ -20,6 +20,9 @@ do openErrors = (delay = 1000) ->
     errors.onopen = -> console.log "yo"
     errors.onmessage = (message) ->
         {data} = message
+        object = JSON.parse data
+        for which, error of object
+            hotkeys.setError which, error
         console.log "woah an error!"
         console.log data
     errors.onclose = reopen openErrors, delay
