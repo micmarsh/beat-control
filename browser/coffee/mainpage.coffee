@@ -27,6 +27,11 @@ Hotkeys = React.createClass
         settings[which] = text
         @setKeys settings
 
+    setError: (which, error) ->
+        {errors} = @state
+        errors[which] = error
+        @setState {errors}
+
     appendText: (which, text) ->
         oldText = @state.settings[which]
 
@@ -66,6 +71,7 @@ Hotkeys = React.createClass
                         p null, "#{name}: ", span(null, setting), button {onClick: @click name}, 'change'
                         if @state.errors[name] then p(null, @state.errors[name]) else ''
                     ]
+
 hotkeys = Hotkeys()
 
 React.renderComponent hotkeys, document.getElementById 'mainDisplay'

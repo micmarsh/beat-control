@@ -17,6 +17,7 @@ do openControls = (delay = 1000)->
 
 do openErrors = (delay = 1000) ->
     errors = new WebSocket PREFIX + 'errors'
+    errors.onopen = -> console.log "yo"
     errors.onmessage = (message) ->
         {data} = message
         console.log "woah an error!"
