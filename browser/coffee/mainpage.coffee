@@ -35,7 +35,7 @@ Hotkeys = React.createClass
         setTimeout =>
             errors[which] = ''
             @setState {errors}
-        , 1500
+        , 3500
 
 
     appendText: (which, text) ->
@@ -78,7 +78,7 @@ Hotkeys = React.createClass
     render: do ->
         {div, h1, p, span, button} = React.DOM
         ->            
-            div null, 
+            div {id: 'main'}, 
                 h1 null, "Hotkeys Settings"
                 for name, setting of @state.settings
                     [       
