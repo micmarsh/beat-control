@@ -98,7 +98,7 @@ LinkButton = React.createClass
             div {id: 'main'},
                 button {onClick: @click}, "Adjust Settings"
 
-if window.chrome and chrome.runtime and chrome.runtime.id
+if window.chrome and chrome.runtime and chrome.runtime.id 
     do ->
         button = LinkButton()
         React.renderComponent button, document.getElementById 'mainDisplay'

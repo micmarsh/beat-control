@@ -10,4 +10,6 @@ coffee -cj javascripts/injectscripts.js _injectscripts.coffee
 cat coffee/mainpage.coffee coffee/sockets.coffee coffee/keypresses.coffee > _mainpage.coffee
 coffee -cj javascripts/main.js _mainpage.coffee
 
+coffee -cj javascripts/welcome.js coffee/welcome.coffee
+
 rm _* 
