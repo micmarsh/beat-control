@@ -53,7 +53,7 @@ Hotkeys = React.createClass
         return newText
 
     getInitialState: ->
-        last: {}
+        last: { }
         settings:
             play: 'control 1'
             back: 'control 7'
@@ -79,7 +79,7 @@ Hotkeys = React.createClass
         {div, h1, p, span, button} = React.DOM
         ->            
             div null, 
-                h1 null, "Change Ur Hotkeys"
+                h1 null, "Hotkeys Settings"
                 for name, setting of @state.settings
                     [       
                         p null, "#{name}: ", span(null, setting), button {onClick: @click name}, 'change'

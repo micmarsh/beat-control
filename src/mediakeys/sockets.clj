@@ -13,11 +13,13 @@
 
 (def channels (atom { }))
 (defn start! [conn channel]
-    (swap! channels assoc conn channel)
+    (swap! channels assoc 
+        (.toString conn) channel)
     (print @channels))
 (defn stop! [conn]
     (close! (@channels conn))
-    (swap! channels dissoc conn)
+    (swap! channels dissoc 
+        (.toString conn))
     (print @channels))
 
 (defn keypresses [incoming]
