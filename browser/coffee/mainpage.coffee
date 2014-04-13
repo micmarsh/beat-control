@@ -30,7 +30,8 @@ Hotkeys = React.createClass
     setError: (which, error) ->
         {errors} = @state
         errors[which] = "Error: Can't set key combination: #{error}"
-        @setState {errors}
+        console.log @state.last
+        @setState {errors, settings: @state.last}
         setTimeout =>
             errors[which] = ''
             @setState {errors}
@@ -52,6 +53,7 @@ Hotkeys = React.createClass
         return newText
 
     getInitialState: ->
+        last: {}
         settings:
             play: 'control 1'
             back: 'control 7'
@@ -61,9 +63,16 @@ Hotkeys = React.createClass
             back: ''
             forward: ''
 
+    saveLast: ->
+        clone = { }
+        for key, value of @state.settings
+            clone[key] = value
+        @setState {last: clone}
+
     click: (which) -> =>
         console.log which
         changing = which
+        @saveLast()
         @setText which, PLACEHOLDER
 
     render: do ->
@@ -74,7 +83,7 @@ Hotkeys = React.createClass
                 for name, setting of @state.settings
                     [       
                         p null, "#{name}: ", span(null, setting), button {onClick: @click name}, 'change'
-                        if @state.errors[name] then p(null, @state.errors[name]) else ''
+                        if @state.errors[name] then p({className: 'error'}, @state.errors[name]) else ''
                     ]
 
 hotkeys = Hotkeys()
