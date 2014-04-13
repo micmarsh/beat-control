@@ -1,14 +1,14 @@
 (ns mediakeys.sockets
     (:use [mediakeys.utils :only [defcurried dochan]]
-          [clojure.core.async :only [put! chan mult tap]])
+          [clojure.core.async :only [put! chan tap]])
     (:import [org.webbitserver WebSocketHandler]))
 
 (defcurried send! [c message] 
     (.send c message))
 
-(defn clone [channel]
+(defn clone [mult]
     (let [return (chan)]
-        (tap (mult channel) return)
+        (tap mult return)
         return))
 
 (defn keypresses [incoming]
