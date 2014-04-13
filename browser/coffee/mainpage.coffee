@@ -46,6 +46,10 @@ Hotkeys = React.createClass
             play: 'control 1'
             back: 'control 7'
             forward: 'control 8'
+        errors:
+            play: ''
+            back: ''
+            forward: ''
 
     click: (which) -> =>
         console.log which
@@ -58,8 +62,10 @@ Hotkeys = React.createClass
             div null, 
                 h1 null, "Change Ur Hotkeys"
                 for name, setting of @state.settings
-                    p null, "#{name}: ", span(null, setting), button {onClick: @click name}, 'change'
-
+                    [       
+                        p null, "#{name}: ", span(null, setting), button {onClick: @click name}, 'change'
+                        if @state.errors[name] then p(null, @state.errors[name]) else ''
+                    ]
 hotkeys = Hotkeys()
 
 React.renderComponent hotkeys, document.getElementById 'mainDisplay'

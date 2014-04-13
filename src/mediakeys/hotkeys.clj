@@ -16,7 +16,6 @@
 (defn allowed? [change]
     (let [key-val (first change)
           [action hotkey] key-val]
-          (println action hotkey)
         (if hotkey
             (-> hotkey make-keystroke not-nil?)
             true)))
