@@ -1,14 +1,14 @@
-# mediakeys
+# Kapellmeister
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure desktop app + Chrome extension for controlling your web based music players
 
 ## Usage
 
-FIXME
+Download the jar from somewhere yet to be determined, run it.
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Michael Marsh
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
