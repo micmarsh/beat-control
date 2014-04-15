@@ -4,7 +4,7 @@ A Clojure desktop app + Chrome extension for controlling your web based music pl
 
 ## Usage
 
-Download the jar from somewhere yet to be determined, run it.
+Download the jar from somewhere yet to be determined, run it. It'll prompt you to install the [chrome extension](), too.
 
 ## License
 
