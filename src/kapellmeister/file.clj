@@ -1,9 +1,9 @@
-(ns mediakeys.file
-    (:use [mediakeys.channels :only [update-keys]]
+(ns kapellmeister.file
+    (:use [kapellmeister.channels :only [update-keys]]
           [clojure.core.async :only [chan put!]]))
 
 (def HOME (System/getProperty "user.home"))
-(def DIR (str HOME "/.mediakeys/"))
+(def DIR (str HOME "/.kapellmeister/"))
 (.mkdir (java.io.File. DIR))
 (def LOCATION (str DIR "keys"))
 (def DEFAULT {

@@ -1,7 +1,7 @@
-(ns mediakeys.core
-    (:use [mediakeys.hotkeys :only [keypress-events! allowed?]]
-          [mediakeys.sockets :only [keypresses controls errors]]
-          [mediakeys.channels :only [update-keys]]
+(ns kapellmeister.core
+    (:use [kapellmeister.hotkeys :only [keypress-events! allowed?]]
+          [kapellmeister.sockets :only [keypresses controls errors]]
+          [kapellmeister.channels :only [update-keys]]
           [clojure.core.async :only [map< chan split mult]])
     (:require [clojure.data.json :as json])
     (:import 

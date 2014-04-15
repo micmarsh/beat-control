@@ -1,5 +1,5 @@
-(ns mediakeys.sockets
-    (:use [mediakeys.utils :only [defcurried dochan]]
+(ns kapellmeister.sockets
+    (:use [kapellmeister.utils :only [defcurried dochan]]
           [clojure.core.async :only [put! chan close! tap]])
     (:import [org.webbitserver WebSocketHandler]))
 

@@ -1,7 +1,7 @@
-(ns mediakeys.hotkeys
-    (:use [mediakeys.file :only [DEFAULT_KEYS save-keys!]]
-          [mediakeys.utils :only [dochan defcurried]]
-          [mediakeys.channels :only [keymaster-errors]]
+(ns kapellmeister.hotkeys
+    (:use [kapellmeister.file :only [DEFAULT_KEYS save-keys!]]
+          [kapellmeister.utils :only [dochan defcurried]]
+          [kapellmeister.channels :only [keymaster-errors]]
           [clojure.core.async :only [chan go-loop <! pipe put!]]))
 
 (import [com.tulskiy.keymaster.common Provider HotKeyListener])

@@ -1,4 +1,4 @@
-(ns mediakeys.channels
+(ns kapellmeister.channels
     (:use [clojure.core.async :only [chan]]))
 
 (def update-keys (chan))
