@@ -3,7 +3,7 @@
     "version": "0.1",
     "description": "Control grooveshark, rdio, and others from your desktop's media keys",
     "browser_action": {
-        "default_title": "Web HotKeys",
+        "default_title": "Kapellmeister",
         "default_popup": "index.html"
     },
     "manifest_version": 2,
