@@ -15,4 +15,4 @@
   :aot :all
   :omit-source true
 
-  :main mediakeys.core)
+  :main kapellmeister.core)

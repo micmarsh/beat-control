@@ -5,7 +5,8 @@
 (def HOME (System/getProperty "user.home"))
 (def DIR (str HOME "/.kapellmeister/"))
 (.mkdir (java.io.File. DIR))
-(def LOCATION (str DIR "keys"))
+(def KEYS_LOCATION (str DIR "keys"))
+(def WELCOME_LOCATION (str DIR "welcome"))
 (def DEFAULT {
         :play "control 1"
         :forward "control 8"
@@ -13,12 +14,20 @@
     })
 
 (def DEFAULT_KEYS
-    (try (let [keys (load-file LOCATION)]
+    (try (let [keys (load-file KEYS_LOCATION)]
             (put! update-keys keys)
             keys)
         (catch java.io.FileNotFoundException e
             DEFAULT)))
 
+(def SHOULD_WELCOME 
+    (try (let [welcome (load-file WELCOME_LOCATION)]
+            (spit WELCOME_LOCATION (inc welcome))
+            (< welcome 2))
+        (catch java.io.FileNotFoundException e
+            (spit WELCOME_LOCATION 0)
+            true)))
+
 (defn save-keys! [keys]
     (put! update-keys keys)
-    (spit LOCATION keys))
+    (spit KEYS_LOCATION keys))
