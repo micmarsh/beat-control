@@ -1,5 +1,5 @@
 {
-    "name": "web-hotkeys",
+    "name": "kapellmeister",
     "version": "0.1",
     "description": "Control grooveshark, rdio, and others from your desktop's media keys",
     "browser_action": {
