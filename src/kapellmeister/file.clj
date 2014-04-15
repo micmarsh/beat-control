@@ -21,9 +21,11 @@
             DEFAULT)))
 
 (def SHOULD_WELCOME 
-    (try (let [welcome (load-file WELCOME_LOCATION)]
-            (spit WELCOME_LOCATION (inc welcome))
-            (< welcome 2))
+    (try (let [times (load-file WELCOME_LOCATION)
+              should-welcome (< times 2)]
+            (when should-welcome
+                (spit WELCOME_LOCATION (inc times)))
+            should-welcome)
         (catch java.io.FileNotFoundException e
             (spit WELCOME_LOCATION 0)
             true)))
