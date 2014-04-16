@@ -93,10 +93,18 @@ LinkButton = React.createClass
         chrome.tabs.create {url: "http://localhost:8888"}
 
     render: do ->
-        {button, div} = React.DOM
+        {button, div, ul, li, a} = React.DOM
         ->
             div {id: 'main'},
-                button {onClick: @click}, "Adjust Settings"
+                button({onClick: @click}, "Adjust Settings"),
+                ul null, [
+                    for name, link of compatibleSites
+                        do (name, link) ->
+                            li onClick: -> 
+                                chrome.tabs.create
+                                    url: "http://#{link}"
+                            , name
+                ]
 
 if window.chrome and chrome.runtime and chrome.runtime.id 
     do ->

@@ -11,4 +11,5 @@ listItems = for name, url of compatibleSites
 
 list = "<ul>#{listItems.join('')}</ul>"
 
-document.getElementById('sites').innerHTML = list
+if document.getElementById('sites')?
+    document.getElementById('sites').innerHTML = list
