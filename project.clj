@@ -11,7 +11,7 @@
                  [org.clojure/core.async "0.1.278.0-76b25b-alpha"]]
 
     ;; uberjar
-  :uberjar-name "hotkeys.jar"
+  :uberjar-name "kapellmeister.jar"
   :aot :all
   :omit-source true
 
