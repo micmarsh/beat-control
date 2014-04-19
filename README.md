@@ -2,9 +2,10 @@
 
 A Clojure desktop app + Chrome extension for controlling your web based music players
 
-## Usage
+## Installation + Usage
 
-Download the jar from somewhere yet to be determined, run it. It'll prompt you to install the [chrome extension](), too.
+Download the jar from [right here](https://github.com/micmarsh/kapellmeister/blob/master/dist/kapellmeister.jar), run it. 
+
 
 ## License
 

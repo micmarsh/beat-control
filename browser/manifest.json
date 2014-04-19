@@ -4,10 +4,16 @@
     "description": "Control grooveshark, rdio, and others from your desktop's media keys",
     "browser_action": {
         "default_title": "Kapellmeister",
-        "default_popup": "index.html"
+        "default_popup": "index.html",
+        "default_icon": "icon48.png"
+    },
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
     },
     "manifest_version": 2,
-    "content_security_policy": "default-src 'self'; connect-src 'ws://localhost'",
+    "content_security_policy": "default-src 'self'",
     "minimum_chrome_version": "14.0.835.202",
     "content_scripts": [
         {
