@@ -35,6 +35,6 @@ do open = (delay = 1000) ->
     , delay
 
 setTimeout ->
-    injectScript('http://code.jquery.com/jquery-2.1.0.min.js') unless $?
+    injectScript('https://code.jquery.com/jquery-2.1.0.min.js') unless $?
 , 500
 

@@ -1,7 +1,7 @@
 {
-    "name": "kapellmeister",
+    "name": "Kapellmeister",
     "version": "0.1",
-    "description": "Control grooveshark, rdio, and others from your desktop's media keys",
+    "description": "Control grooveshark, rdio, and others with your desktop's hot keys",
     "browser_action": {
         "default_title": "Kapellmeister",
         "default_popup": "index.html",
