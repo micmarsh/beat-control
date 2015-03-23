@@ -39,6 +39,7 @@ pandoraElements =
 elements =
     'grooveshark.com': groovesharkElements
     'www.grooveshark.com': groovesharkElements
+    'preview.grooveshark.com': groovesharkElements
     'rdio.com': rdioElements
     'www.rdio.com': rdioElements
     'brandly.github.io': theListElements
